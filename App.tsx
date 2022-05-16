@@ -1,40 +1,39 @@
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
+import { Asset } from "expo-asset";
 import { Ionicons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import LoggedOutNav from "./navigators/LoggedOutNav";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
 	const [loading, setLoading] = useState(true);
 	const onFinish = () => setLoading(false);
 	const preLoad = async () => {
-		const fontToload = [Ionicons.font];
-		const fontPromises = fontToload.map((font: any) => Font.loadAsync(font));
-		await Promise.all(fontPromises);
+		const fontsToLoad = [Ionicons.font];
+		const fontPromises = fontsToLoad.map((font: any) => Font.loadAsync(font));
+		const imagesToLoad = [
+			require("./assets/instagram.png"),
+			"https://instaclone-uploadssssssssss.s3.ap-northeast-2.amazonaws.com/instagram.png",
+		];
+		const imagePromises = imagesToLoad.map((image: any) =>
+			Asset.loadAsync(image)
+		);
+		await Promise.all([...fontPromises, ...imagePromises]);
 	};
 	if (loading) {
 		return (
 			<AppLoading
 				startAsync={preLoad}
 				onFinish={onFinish}
-				onError={console.warn}
+				onError={console.error}
 			/>
 		);
 	}
+
 	return (
-		<View style={styles.container}>
-			<Text>Hello!</Text>
-			<StatusBar style="auto" />
-		</View>
+		<NavigationContainer>
+			<LoggedOutNav />
+		</NavigationContainer>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-});
