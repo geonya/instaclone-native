@@ -32,8 +32,10 @@ export default function App() {
 	}
 
 	return (
-		<NavigationContainer>
-			<LoggedOutNav />
-		</NavigationContainer>
+		<>
+			<NavigationContainer>
+				<LoggedOutNav />
+			</NavigationContainer>
+		</>
 	);
 }
