@@ -4,27 +4,15 @@ import { StackParamList } from "../navigators/LoggedOutNav";
 import styled from "styled-components/native";
 import { colors } from "../colors";
 import { TouchableOpacity } from "react-native";
+import AuthLayOut from "../components/auth/AuthLayout";
+import AuthButton from "../components/auth/AuthButton";
 
 const Container = styled.View`
 	flex: 1;
 	align-items: center;
 	justify-content: center;
 	background-color: black;
-`;
-const Logo = styled.Image`
-	max-width: 50%;
-	max-height: 150px;
-`;
-
-const CreateAccount = styled.View`
-	background-color: ${colors.blue};
-	padding: 5px 10px;
-	border-radius: 3px;
-	margin-bottom: 10px;
-`;
-
-const CreateAccountText = styled.Text`
-	color: white;
+	padding: 0px 40px;
 `;
 
 const LoginLink = styled.Text`
@@ -40,17 +28,16 @@ const Welcome = ({ navigation }: WelcomeScreenProps) => {
 	const goToCreateAccount = () => navigation.navigate("CreateAccount");
 	const goToLogin = () => navigation.navigate("Login");
 	return (
-		<Container>
-			<Logo resizeMode="contain" source={require("../assets/instagram.png")} />
-			<TouchableOpacity onPress={goToCreateAccount}>
-				<CreateAccount>
-					<CreateAccountText>Create Account</CreateAccountText>
-				</CreateAccount>
-				<TouchableOpacity onPress={goToLogin}>
-					<LoginLink>Log In</LoginLink>
-				</TouchableOpacity>
+		<AuthLayOut>
+			<AuthButton
+				onPress={goToCreateAccount}
+				text="Create New Account"
+				disabled={false}
+			/>
+			<TouchableOpacity onPress={goToLogin}>
+				<LoginLink>Log In</LoginLink>
 			</TouchableOpacity>
-		</Container>
+		</AuthLayOut>
 	);
 };
 
