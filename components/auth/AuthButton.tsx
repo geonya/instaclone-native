@@ -9,7 +9,6 @@ const Button = styled.TouchableOpacity`
 	width: 100%;
 	opacity: ${(props) => (props.disabled ? "0.5" : "1")};
 `;
-
 const ButtonText = styled.Text`
 	color: white;
 	text-align: center;

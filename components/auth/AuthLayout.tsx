@@ -10,7 +10,7 @@ const Container = styled.View`
 
 const Logo = styled.Image`
 	width: 200px;
-	max-height: 150px;
+	height: 150px;
 `;
 
 interface IAuthLayoutProps {
