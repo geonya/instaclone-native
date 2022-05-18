@@ -25,6 +25,7 @@ const Welcome = ({ navigation }: WelcomeScreenProps) => {
 				onPress={goToCreateAccount}
 				text="Create New Account"
 				disabled={false}
+				loading={false}
 			/>
 			<TouchableOpacity onPress={goToLogin}>
 				<LoginLink>Log In</LoginLink>

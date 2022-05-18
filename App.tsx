@@ -6,24 +6,30 @@ import { useState } from "react";
 import LoggedOutNav from "./navigators/LoggedOutNav";
 import { NavigationContainer } from "@react-navigation/native";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
-import client, { isLoggedInVar } from "./apollo";
+import client, { isLoggedInVar, tokenVar } from "./apollo";
 import LoggedInNav from "./navigators/LoggedInNav";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar);
 	const [loading, setLoading] = useState(true);
 	const onFinish = () => setLoading(false);
-	const preLoad = async () => {
+	const preLoadAssets = () => {
 		const fontsToLoad = [Ionicons.font];
 		const fontPromises = fontsToLoad.map((font: any) => Font.loadAsync(font));
-		const imagesToLoad = [
-			require("./assets/instagram.png"),
-			"https://instaclone-uploadssssssssss.s3.ap-northeast-2.amazonaws.com/instagram.png",
-		];
+		const imagesToLoad = [require("./assets/instagram.png")];
 		const imagePromises = imagesToLoad.map((image: any) =>
 			Asset.loadAsync(image)
 		);
-		await Promise.all([...fontPromises, ...imagePromises]);
+		Promise.all([...fontPromises, ...imagePromises]);
+	};
+	const preLoad = async () => {
+		const token = await AsyncStorage.getItem("token");
+		if (token) {
+			isLoggedInVar(true);
+			tokenVar(token);
+		}
+		return preLoadAssets();
 	};
 	if (loading) {
 		return (

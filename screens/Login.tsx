@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
-import { isLoggedInVar } from "../apollo";
+import { isLoggedInVar, logUserIn } from "../apollo";
 import AuthButton from "../components/auth/AuthButton";
 import AuthLayOut from "../components/auth/AuthLayout";
 import {
@@ -20,26 +20,30 @@ interface ILoginValues {
 	username: string;
 	password: string;
 }
-const Login = ({ navigation }: LoginScreenProps) => {
+const Login = ({ route }: LoginScreenProps) => {
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		formState: { errors },
+		watch,
+	} = useForm<ILoginValues>({
+		defaultValues: {
+			username: route.params?.username,
+			password: route.params?.password,
+		},
+	});
 	const [logInMutation, { loading }] = useLoginMutation({
 		onCompleted: (data) => {
 			if (!data?.login) return;
 			const {
 				login: { ok, error, token },
 			} = data;
-			if (ok) {
-				isLoggedInVar(true);
+			if (ok && token) {
+				logUserIn(token);
 			}
 		},
 	});
-	const {
-		register,
-		handleSubmit,
-		setValue,
-		formState: { errors, isValid },
-		watch,
-		getValues,
-	} = useForm<ILoginValues>();
 	const usernameRef = useRef<TextInput | null>(null);
 	const passwordRef = useRef<TextInput | null>(null);
 	const onValid: SubmitHandler<ILoginValues> = (data) => {
@@ -80,8 +84,10 @@ const Login = ({ navigation }: LoginScreenProps) => {
 		<AuthLayOut>
 			<InputBox>
 				<AuthTextInput
+					value={watch("username")}
 					autoFocus
 					autoCapitalize="none"
+					autoCorrect={false}
 					ref={usernameRef}
 					placeholder="Username"
 					placeholderTextColor="gray"
@@ -94,6 +100,7 @@ const Login = ({ navigation }: LoginScreenProps) => {
 			</InputBox>
 			<InputBox lastOne>
 				<AuthTextInput
+					value={watch("password")}
 					ref={passwordRef}
 					secureTextEntry
 					placeholder="Password"

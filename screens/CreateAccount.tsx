@@ -12,6 +12,7 @@ import {
 } from "../components/auth/AuthShared";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
+import { useCreateAccountMutation } from "../generated/graphql";
 
 type CreateAccountScreenProps = NativeStackScreenProps<
 	StackParamList,
@@ -30,14 +31,34 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 		register,
 		handleSubmit,
 		setValue,
-		formState: { errors, isValid },
+		formState: { errors },
+		getValues,
+		watch,
 	} = useForm<ICreateAccountValues>();
+	const [createAccountMutation, { loading }] = useCreateAccountMutation({
+		onCompleted: (data) => {
+			if (!data.createAccount) return;
+			if (data.createAccount.ok) {
+				const { username, password } = getValues();
+				navigation.navigate("Login", {
+					username,
+					password,
+				});
+			}
+		},
+	});
 	const lastNameRef = useRef<TextInput | null>(null);
 	const usernameRef = useRef<TextInput | null>(null);
 	const emailRef = useRef<TextInput | null>(null);
 	const passwordRef = useRef<TextInput | null>(null);
 	const onValid: SubmitHandler<ICreateAccountValues> = (data) => {
-		console.log(data);
+		if (!loading) {
+			createAccountMutation({
+				variables: {
+					...data,
+				},
+			});
+		}
 	};
 	useEffect(() => {
 		register("firstName", {
@@ -107,6 +128,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				<AuthTextInput
 					autoFocus
 					autoCapitalize="none"
+					autoCorrect={false}
 					placeholder={errors.firstName ? errors.firstName?.message : "First"}
 					placeholderTextColor="gray"
 					returnKeyType="next"
@@ -118,6 +140,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			<InputBox>
 				<AuthTextInput
 					ref={lastNameRef}
+					autoCorrect={false}
 					autoCapitalize="none"
 					placeholder="Last Name"
 					placeholderTextColor="gray"
@@ -130,6 +153,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			<InputBox>
 				<AuthTextInput
 					ref={usernameRef}
+					autoCorrect={false}
 					autoCapitalize="none"
 					placeholder="Username"
 					placeholderTextColor="gray"
@@ -143,6 +167,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				<AuthTextInput
 					ref={emailRef}
 					autoCapitalize="none"
+					autoCorrect={false}
 					keyboardType="email-address"
 					placeholder="Email"
 					placeholderTextColor="gray"
@@ -167,8 +192,14 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			</InputBox>
 			<AuthButton
 				onPress={handleSubmit(onValid)}
-				disabled={false}
-				loading={!isValid}
+				disabled={
+					!watch("email") ||
+					!watch("firstName") ||
+					!watch("lastName") ||
+					!watch("username") ||
+					!watch("password")
+				}
+				loading={loading}
 				text="Create Account"
 			/>
 		</AuthLayOut>

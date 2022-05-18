@@ -5,13 +5,12 @@ import Welcome from "../screens/Welcome";
 
 export type StackParamList = {
 	Welcome: undefined;
-	Login: undefined;
+	Login: { username: string; password: string } | undefined;
 	CreateAccount: undefined;
 };
 
 const LoggedOutNav = () => {
 	const Stack = createNativeStackNavigator<StackParamList>();
-
 	return (
 		<Stack.Navigator
 			screenOptions={{

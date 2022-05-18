@@ -8,4 +8,22 @@ gql`
 			error
 		}
 	}
+	mutation createAccount(
+		$firstName: String!
+		$username: String!
+		$email: String!
+		$password: String!
+		$lastName: String
+	) {
+		createAccount(
+			firstName: $firstName
+			username: $username
+			email: $email
+			password: $password
+			lastName: $lastName
+		) {
+			ok
+			error
+		}
+	}
 `;
