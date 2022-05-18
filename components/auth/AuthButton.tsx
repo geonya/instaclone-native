@@ -16,9 +16,9 @@ const ButtonText = styled.Text`
 `;
 interface AuthButton {
 	onPress(): void;
-	disabled: boolean;
+	disabled?: boolean;
 	text: string;
-	loading: boolean;
+	loading?: boolean;
 }
 const AuthButton = ({ onPress, disabled, text, loading }: AuthButton) => {
 	return (

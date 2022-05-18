@@ -29,8 +29,8 @@ const Login = ({ route }: LoginScreenProps) => {
 		watch,
 	} = useForm<ILoginValues>({
 		defaultValues: {
-			username: route.params?.username,
-			password: route.params?.password,
+			username: route.params?.username || "",
+			password: route.params?.password || "",
 		},
 	});
 	const [logInMutation, { loading }] = useLoginMutation({
