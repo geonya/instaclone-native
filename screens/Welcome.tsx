@@ -7,14 +7,6 @@ import { TouchableOpacity } from "react-native";
 import AuthLayOut from "../components/auth/AuthLayout";
 import AuthButton from "../components/auth/AuthButton";
 
-const Container = styled.View`
-	flex: 1;
-	align-items: center;
-	justify-content: center;
-	background-color: black;
-	padding: 0px 40px;
-`;
-
 const LoginLink = styled.Text`
 	text-align: center;
 	color: ${colors.blue};

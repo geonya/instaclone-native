@@ -1,5 +1,6 @@
+import { RefObject } from "react";
 import { TextInput } from "react-native";
-import styled from "styled-components";
+import styled from "styled-components/native";
 
 export const AuthTextInput = styled(TextInput)<{ lastOne?: boolean }>`
 	color: white;
@@ -8,3 +9,6 @@ export const AuthTextInput = styled(TextInput)<{ lastOne?: boolean }>`
 	border-radius: 4px;
 	margin-bottom: ${(props) => (props.lastOne ? 20 : 8)}px;
 `;
+export const onNext = (nextOne: RefObject<TextInput | null>) => {
+	nextOne.current?.focus();
+};
