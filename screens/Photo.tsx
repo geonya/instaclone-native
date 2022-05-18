@@ -4,10 +4,10 @@ import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
 type SearchScreenProps = NativeStackScreenProps<
 	StackNavFactoryParamList,
-	"Search"
+	"Photo"
 >;
 
-const Search = ({ navigation }: SearchScreenProps) => {
+const Photo = ({ navigation }: SearchScreenProps) => {
 	return (
 		<View
 			style={{
@@ -17,11 +17,11 @@ const Search = ({ navigation }: SearchScreenProps) => {
 				justifyContent: "center",
 			}}
 		>
-			<TouchableOpacity onPress={() => navigation.navigate("Photo")}>
-				<Text style={{ color: "white" }}>Go to Photo</Text>
+			<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+				<Text style={{ color: "white" }}>Go To Profile</Text>
 			</TouchableOpacity>
 		</View>
 	);
 };
 
-export default Search;
+export default Photo;

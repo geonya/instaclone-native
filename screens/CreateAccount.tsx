@@ -24,6 +24,7 @@ interface ICreateAccountValues {
 	username: string;
 	email: string;
 	password: string;
+	result: string;
 }
 
 const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
@@ -31,18 +32,28 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 		register,
 		handleSubmit,
 		setValue,
+		setError,
 		formState: { errors },
 		getValues,
 		watch,
+		clearErrors,
 	} = useForm<ICreateAccountValues>();
 	const [createAccountMutation, { loading }] = useCreateAccountMutation({
 		onCompleted: (data) => {
 			if (!data.createAccount) return;
-			if (data.createAccount.ok) {
+			const {
+				createAccount: { ok, error },
+			} = data;
+			if (ok) {
 				const { username, password } = getValues();
 				navigation.navigate("Login", {
 					username,
 					password,
+				});
+			}
+			if (error) {
+				setError("result", {
+					message: error,
 				});
 			}
 		},
@@ -132,7 +143,10 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 					placeholder={errors.firstName ? errors.firstName?.message : "First"}
 					placeholderTextColor="gray"
 					returnKeyType="next"
-					onChangeText={(text) => setValue("firstName", text)}
+					onChangeText={(text) => {
+						setValue("firstName", text);
+						clearErrors("result");
+					}}
 					onSubmitEditing={() => onNext(lastNameRef)}
 				/>
 				<FormError message={errors.firstName?.message} />
@@ -145,7 +159,10 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 					placeholder="Last Name"
 					placeholderTextColor="gray"
 					returnKeyType="next"
-					onChangeText={(text) => setValue("lastName", text)}
+					onChangeText={(text) => {
+						setValue("lastName", text);
+						clearErrors("result");
+					}}
 					onSubmitEditing={() => onNext(usernameRef)}
 				/>
 				<FormError message={errors.lastName?.message} />
@@ -158,7 +175,10 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 					placeholder="Username"
 					placeholderTextColor="gray"
 					returnKeyType="next"
-					onChangeText={(text) => setValue("username", text)}
+					onChangeText={(text) => {
+						setValue("username", text);
+						clearErrors("result");
+					}}
 					onSubmitEditing={() => onNext(emailRef)}
 				/>
 				<FormError message={errors.username?.message} />
@@ -172,7 +192,10 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 					placeholder="Email"
 					placeholderTextColor="gray"
 					returnKeyType="next"
-					onChangeText={(text) => setValue("email", text)}
+					onChangeText={(text) => {
+						setValue("email", text);
+						clearErrors("result");
+					}}
 					onSubmitEditing={() => onNext(passwordRef)}
 				/>
 				<FormError message={errors.email?.message} />
@@ -185,7 +208,10 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 					placeholderTextColor="gray"
 					returnKeyType="done"
 					blurOnSubmit
-					onChangeText={(text) => setValue("password", text)}
+					onChangeText={(text) => {
+						setValue("password", text);
+						clearErrors("result");
+					}}
 					onSubmitEditing={handleSubmit(onValid)}
 				/>
 				<FormError message={errors.password?.message} />
@@ -202,6 +228,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				loading={loading}
 				text="Create Account"
 			/>
+			<FormError message={errors.result?.message} />
 		</AuthLayOut>
 	);
 };

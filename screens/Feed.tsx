@@ -1,9 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text, TouchableOpacity, View } from "react-native";
-import { isLoggedInVar, tokenVar } from "../apollo";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Text, View } from "react-native";
+import { isLoggedInVar, logUserOut, tokenVar } from "../apollo";
 import AuthButton from "../components/auth/AuthButton";
+import { useSeeFeedQuery } from "../generated/graphql";
+import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
-const Feed = () => {
+type SearchScreenProps = NativeStackScreenProps<
+	StackNavFactoryParamList,
+	"Feed"
+>;
+
+const Feed = ({ navigation }: SearchScreenProps) => {
+	const { data } = useSeeFeedQuery();
+	console.log(data);
 	return (
 		<View
 			style={{
@@ -14,14 +24,7 @@ const Feed = () => {
 			}}
 		>
 			<Text style={{ color: "white" }}>Feed</Text>
-			<AuthButton
-				text="Log Out"
-				onPress={async () => {
-					await AsyncStorage.multiRemove(["token", "loggedIn"]);
-					tokenVar("");
-					isLoggedInVar(false);
-				}}
-			/>
+			<AuthButton text="Log Out" onPress={() => logUserOut()} />
 		</View>
 	);
 };

@@ -3,6 +3,7 @@ import styled from "styled-components/native";
 const Message = styled.Text`
 	color: tomato;
 	font-weight: 600;
+	text-align: center;
 `;
 
 interface IFormErrorProps {

@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-const Profile = () => {
+const Me = () => {
 	return (
 		<View
 			style={{
@@ -10,9 +10,9 @@ const Profile = () => {
 				justifyContent: "center",
 			}}
 		>
-			<Text style={{ color: "white" }}>Someone's Profile</Text>
+			<Text style={{ color: "white" }}>Me</Text>
 		</View>
 	);
 };
 
-export default Profile;
+export default Me;

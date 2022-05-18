@@ -19,15 +19,19 @@ type LoginScreenProps = NativeStackScreenProps<StackParamList, "Login">;
 interface ILoginValues {
 	username: string;
 	password: string;
+	result: string;
 }
 const Login = ({ route }: LoginScreenProps) => {
 	const {
 		register,
 		handleSubmit,
 		setValue,
+		setError,
+		clearErrors,
 		formState: { errors },
 		watch,
 	} = useForm<ILoginValues>({
+		mode: "onChange",
 		defaultValues: {
 			username: route.params?.username || "",
 			password: route.params?.password || "",
@@ -41,6 +45,11 @@ const Login = ({ route }: LoginScreenProps) => {
 			} = data;
 			if (ok && token) {
 				logUserIn(token);
+			}
+			if (error) {
+				setError("result", {
+					message: error,
+				});
 			}
 		},
 	});
@@ -94,7 +103,10 @@ const Login = ({ route }: LoginScreenProps) => {
 					returnKeyType="next"
 					onSubmitEditing={() => onNext(passwordRef)}
 					blurOnSubmit
-					onChangeText={(text) => setValue("username", text)}
+					onChangeText={(text) => {
+						setValue("username", text);
+						clearErrors("result");
+					}}
 				/>
 				<FormError message={errors.username?.message} />
 			</InputBox>
@@ -108,7 +120,10 @@ const Login = ({ route }: LoginScreenProps) => {
 					returnKeyType="done"
 					blurOnSubmit
 					lastOne
-					onChangeText={(text) => setValue("password", text)}
+					onChangeText={(text) => {
+						setValue("password", text);
+						clearErrors("result");
+					}}
 					onSubmitEditing={handleSubmit(onValid)}
 				/>
 				<FormError message={errors.password?.message} />
@@ -119,6 +134,7 @@ const Login = ({ route }: LoginScreenProps) => {
 				loading={loading}
 				disabled={!watch("username") || !watch("password")}
 			/>
+			<FormError message={errors.result?.message} />
 		</AuthLayOut>
 	);
 };
