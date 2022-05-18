@@ -168,6 +168,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			<AuthButton
 				onPress={handleSubmit(onValid)}
 				disabled={false}
+				loading={!isValid}
 				text="Create Account"
 			/>
 		</AuthLayOut>

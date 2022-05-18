@@ -1,7 +1,8 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RefObject, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "react-native";
+import { isLoggedInVar } from "../apollo";
 import AuthButton from "../components/auth/AuthButton";
 import AuthLayOut from "../components/auth/AuthLayout";
 import {
@@ -11,6 +12,7 @@ import {
 	onNext,
 } from "../components/auth/AuthShared";
 import FormError from "../components/auth/FormError";
+import { useLoginMutation } from "../generated/graphql";
 import { StackParamList } from "../navigators/LoggedOutNav";
 
 type LoginScreenProps = NativeStackScreenProps<StackParamList, "Login">;
@@ -19,17 +21,37 @@ interface ILoginValues {
 	password: string;
 }
 const Login = ({ navigation }: LoginScreenProps) => {
+	const [logInMutation, { loading }] = useLoginMutation({
+		onCompleted: (data) => {
+			if (!data?.login) return;
+			const {
+				login: { ok, error, token },
+			} = data;
+			if (ok) {
+				isLoggedInVar(true);
+			}
+		},
+	});
 	const {
 		register,
 		handleSubmit,
 		setValue,
 		formState: { errors, isValid },
+		watch,
+		getValues,
 	} = useForm<ILoginValues>();
 	const usernameRef = useRef<TextInput | null>(null);
 	const passwordRef = useRef<TextInput | null>(null);
 	const onValid: SubmitHandler<ILoginValues> = (data) => {
-		console.log(data);
+		if (!loading) {
+			logInMutation({
+				variables: {
+					...data,
+				},
+			});
+		}
 	};
+
 	useEffect(() => {
 		register("username", {
 			required: FormErrorMessage.required,
@@ -85,9 +107,10 @@ const Login = ({ navigation }: LoginScreenProps) => {
 				<FormError message={errors.password?.message} />
 			</InputBox>
 			<AuthButton
-				onPress={handleSubmit(onValid)}
-				disabled={false}
 				text="Log In"
+				onPress={handleSubmit(onValid)}
+				loading={loading}
+				disabled={!watch("username") || !watch("password")}
 			/>
 		</AuthLayOut>
 	);

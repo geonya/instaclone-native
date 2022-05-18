@@ -5,8 +5,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import LoggedOutNav from "./navigators/LoggedOutNav";
 import { NavigationContainer } from "@react-navigation/native";
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import client, { isLoggedInVar } from "./apollo";
+import LoggedInNav from "./navigators/LoggedInNav";
 
 export default function App() {
+	const isLoggedIn = useReactiveVar(isLoggedInVar);
 	const [loading, setLoading] = useState(true);
 	const onFinish = () => setLoading(false);
 	const preLoad = async () => {
@@ -30,12 +34,11 @@ export default function App() {
 			/>
 		);
 	}
-
 	return (
-		<>
+		<ApolloProvider client={client}>
 			<NavigationContainer>
-				<LoggedOutNav />
+				{isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
 			</NavigationContainer>
-		</>
+		</ApolloProvider>
 	);
 }

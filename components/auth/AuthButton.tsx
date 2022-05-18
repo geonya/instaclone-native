@@ -1,3 +1,4 @@
+import { ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../../colors";
 
@@ -17,11 +18,16 @@ interface AuthButton {
 	onPress(): void;
 	disabled: boolean;
 	text: string;
+	loading: boolean;
 }
-const AuthButton = ({ onPress, disabled, text }: AuthButton) => {
+const AuthButton = ({ onPress, disabled, text, loading }: AuthButton) => {
 	return (
 		<Button onPress={onPress} disabled={disabled}>
-			<ButtonText>{text}</ButtonText>
+			{loading ? (
+				<ActivityIndicator color="white" />
+			) : (
+				<ButtonText>{text}</ButtonText>
+			)}
 		</Button>
 	);
 };
