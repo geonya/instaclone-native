@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Text, View } from "react-native";
-import { isLoggedInVar, logUserOut, tokenVar } from "../apollo";
-import AuthButton from "../components/auth/AuthButton";
+import { FlatList } from "react-native";
+import PhotoList from "../components/PhotoList";
+import ScreenLayout from "../components/ScreenLayout";
 import { useSeeFeedQuery } from "../generated/graphql";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
@@ -12,20 +11,19 @@ type SearchScreenProps = NativeStackScreenProps<
 >;
 
 const Feed = ({ navigation }: SearchScreenProps) => {
-	const { data } = useSeeFeedQuery();
-	console.log(data);
+	const { data, loading } = useSeeFeedQuery();
 	return (
-		<View
-			style={{
-				backgroundColor: "black",
-				flex: 1,
-				alignItems: "center",
-				justifyContent: "center",
-			}}
-		>
-			<Text style={{ color: "white" }}>Feed</Text>
-			<AuthButton text="Log Out" onPress={() => logUserOut()} />
-		</View>
+		<ScreenLayout loading={loading}>
+			<FlatList
+				style={{ width: "100%" }}
+				data={data?.seeFeed}
+				keyExtractor={(_, index) => index.toString()}
+				renderItem={({ item }) => {
+					return <PhotoList {...item!} />;
+				}}
+				showsVerticalScrollIndicator={false}
+			/>
+		</ScreenLayout>
 	);
 };
 

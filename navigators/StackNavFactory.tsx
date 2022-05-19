@@ -41,10 +41,10 @@ const StackNavFactory = ({ screenName }: IStackNavFactoryProps) => {
 						headerTitle: () => (
 							<Image
 								style={{
-									width: 200,
-									height: 100,
+									width: 150,
+									height: 50,
 								}}
-								resizeMode="contain"
+								resizeMode="cover"
 								source={require("../assets/instagram.png")}
 							/>
 						),
