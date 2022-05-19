@@ -39,8 +39,8 @@ gql`
 		${USER_FRAGMENT}
 	}
 	
-	query SeeFeed {
-		seeFeed {
+	query SeeFeed($offset: Int!) {
+		seeFeed(offset:$offset) {
 			user {
 				...User_Fragment
 			}

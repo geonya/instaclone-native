@@ -232,6 +232,11 @@ export type QuerySearchUsersArgs = {
 };
 
 
+export type QuerySeeFeedArgs = {
+  offset: Scalars['Int'];
+};
+
+
 export type QuerySeeFollowersArgs = {
   page: Scalars['Int'];
   username: Scalars['String'];
@@ -326,7 +331,9 @@ export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type SeeMeQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', id: number, username: string, avatar?: string | null } | null };
 
-export type SeeFeedQueryVariables = Exact<{ [key: string]: never; }>;
+export type SeeFeedQueryVariables = Exact<{
+  offset: Scalars['Int'];
+}>;
 
 
 export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', caption?: string | null, createdAt: string, isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, user: { __typename?: 'User', username: string, avatar?: string | null }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null> | null };
@@ -456,8 +463,8 @@ export type SeeMeQueryHookResult = ReturnType<typeof useSeeMeQuery>;
 export type SeeMeLazyQueryHookResult = ReturnType<typeof useSeeMeLazyQuery>;
 export type SeeMeQueryResult = Apollo.QueryResult<SeeMeQuery, SeeMeQueryVariables>;
 export const SeeFeedDocument = gql`
-    query SeeFeed {
-  seeFeed {
+    query SeeFeed($offset: Int!) {
+  seeFeed(offset: $offset) {
     user {
       ...User_Fragment
     }
@@ -486,10 +493,11 @@ ${PhotoFragmentFragmentDoc}`;
  * @example
  * const { data, loading, error } = useSeeFeedQuery({
  *   variables: {
+ *      offset: // value for 'offset'
  *   },
  * });
  */
-export function useSeeFeedQuery(baseOptions?: Apollo.QueryHookOptions<SeeFeedQuery, SeeFeedQueryVariables>) {
+export function useSeeFeedQuery(baseOptions: Apollo.QueryHookOptions<SeeFeedQuery, SeeFeedQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SeeFeedQuery, SeeFeedQueryVariables>(SeeFeedDocument, options);
       }
