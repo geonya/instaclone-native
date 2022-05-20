@@ -27,6 +27,8 @@ const USER_FRAGMENT = gql`
 	fragment User_Fragment on User {
 		username
 		avatar
+		isFollowing
+		isMe
 	}
 `;
 
@@ -73,6 +75,12 @@ gql`
   }
 	${USER_FRAGMENT}
 	${PHOTO_FRAGMENT}
+}
+query SeePhotoLikes($id: Int!) {
+  seePhotoLikes(id: $id) {
+		...User_Fragment
+  }
+	${USER_FRAGMENT}
 }
 `;
 

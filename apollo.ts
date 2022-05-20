@@ -15,10 +15,14 @@ export const isLoggedInVar = makeVar(false);
 export const tokenVar = makeVar("");
 
 export const logUserIn = async (token: string) => {
-	await AsyncStorage.multiSet([
-		[TOKEN, token],
-		[LOGGED_IN, "true"],
-	]);
+	try {
+		await AsyncStorage.multiSet([
+			[TOKEN, token],
+			[LOGGED_IN, "true"],
+		]);
+	} catch (err) {
+		console.error(err);
+	}
 	isLoggedInVar(true);
 	tokenVar(token);
 };
@@ -42,17 +46,22 @@ const authLink = setContext((_, { headers }) => {
 	};
 });
 
-const client = new ApolloClient({
-	link: authLink.concat(httpLink),
-	cache: new InMemoryCache({
-		typePolicies: {
-			Query: {
-				fields: {
-					seeFeed: offsetLimitPagination(),
-				},
+export const cache = new InMemoryCache({
+	typePolicies: {
+		Query: {
+			fields: {
+				seeFeed: offsetLimitPagination(),
 			},
 		},
-	}),
+		User: {
+			keyFields: (obj) => `User:${obj.username}`,
+		},
+	},
+});
+
+const client = new ApolloClient({
+	link: authLink.concat(httpLink),
+	cache,
 });
 
 export default client;

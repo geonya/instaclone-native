@@ -5,23 +5,11 @@ import { Image, TouchableOpacity, useWindowDimensions } from "react-native";
 import styled from "styled-components/native";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 import { Ionicons } from "@expo/vector-icons";
+import { useToggleLikeMutation } from "../generated/graphql";
+import { UserAvatar, UserInfoBox, Username } from "./sharedStyles";
 
 const Container = styled.View``;
-const Header = styled.TouchableOpacity`
-	flex-direction: row;
-	align-items: center;
-	padding: 10px;
-`;
-const UserAvatar = styled.Image`
-	width: 40px;
-	height: 40px;
-	border-radius: 20px;
-	margin-right: 10px;
-`;
-const Username = styled.Text`
-	color: white;
-	font-weight: 600;
-`;
+
 const File = styled.Image``;
 const Actions = styled.View`
 	flex-direction: row;
@@ -88,9 +76,23 @@ const PhotoList = ({
 			setImageHeight(screenHeight / 3);
 		});
 	}, [file]);
+	const [toggleLikeMutation] = useToggleLikeMutation({
+		variables: {
+			id,
+		},
+		update: (cache) => {
+			cache.modify({
+				id: `Photo:${id}`,
+				fields: {
+					isLiked: (prev) => !prev,
+					likes: (prev) => (isLiked ? prev - 1 : prev + 1),
+				},
+			});
+		},
+	});
 	return (
 		<Container>
-			<Header onPress={() => navigation.navigate("Profile")}>
+			<UserInfoBox onPress={() => navigation.navigate("Profile")}>
 				<UserAvatar
 					resizeMode="cover"
 					source={{
@@ -100,7 +102,7 @@ const PhotoList = ({
 					}}
 				/>
 				<Username>{user.username}</Username>
-			</Header>
+			</UserInfoBox>
 			<File
 				resizeMode="cover"
 				style={{ width: screenWidth, height: imageHeight }}
@@ -108,7 +110,7 @@ const PhotoList = ({
 			/>
 			<ExtraContainer>
 				<Actions>
-					<Action>
+					<Action onPress={() => toggleLikeMutation()}>
 						<Ionicons
 							name={isLiked ? "heart" : "heart-outline"}
 							color={isLiked ? "tomato" : "white"}
@@ -122,7 +124,9 @@ const PhotoList = ({
 						<Ionicons name="paper-plane-outline" color="white" size={20} />
 					</Action>
 				</Actions>
-				<TouchableOpacity onPress={() => navigation.navigate("Likes")}>
+				<TouchableOpacity
+					onPress={() => navigation.navigate("Likes", { photoId: id })}
+				>
 					<Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
 				</TouchableOpacity>
 				<Caption>

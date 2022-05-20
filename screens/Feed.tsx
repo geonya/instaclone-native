@@ -35,7 +35,7 @@ const Feed = ({ navigation }: FeedScreenProps) => {
 				onRefresh={refresh}
 				style={{ width: "100%" }}
 				data={data?.seeFeed}
-				keyExtractor={(_, index) => index.toString()}
+				keyExtractor={(_, i) => i + ""}
 				renderItem={({ item }) => {
 					return <PhotoList {...item!} />;
 				}}

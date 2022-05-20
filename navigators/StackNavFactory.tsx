@@ -16,7 +16,9 @@ export type StackNavFactoryParamList = {
 	Me: undefined;
 	Profile: undefined;
 	Photo: undefined;
-	Likes: undefined;
+	Likes: {
+		photoId: number;
+	};
 	Comments: undefined;
 };
 
