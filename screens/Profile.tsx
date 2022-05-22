@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
@@ -7,12 +7,10 @@ type ProfileProps = NativeStackScreenProps<StackNavFactoryParamList, "Profile">;
 
 const Profile = ({ navigation, route }: ProfileProps) => {
 	useEffect(() => {
-		if (route?.params?.username) {
-			navigation.setOptions({
-				title: `${route.params.username}`,
-			});
-		}
-	}, []);
+		navigation.setOptions({
+			title: route.params.username,
+		});
+	}, [navigation, route.params]);
 	return (
 		<View
 			style={{
