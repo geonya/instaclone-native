@@ -1,22 +1,23 @@
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useWindowDimensions } from "react-native";
 import styled from "styled-components/native";
 import {
 	useFollowUserMutation,
 	useUnfollowUserMutation,
 } from "../generated/graphql";
+import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 import useUser from "./hooks/useUser";
+import { goToProfile } from "./sharedFunction";
 import { UserAvatar, UserInfoBox, Username } from "./sharedStyles";
 
 const Container = styled.View<{ width: number }>`
-	padding: 5px 10px;
+	padding: 5px 0;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 `;
 
 const FollowBtn = styled.TouchableOpacity`
-	border: none;
-
 	background-color: #0095f6;
 	border-radius: 3px;
 	padding: 5px 16px;
@@ -26,19 +27,27 @@ const FollowBtn = styled.TouchableOpacity`
 
 const FollowText = styled.Text`
 	color: white;
-	text-align: center;
 	font-weight: 600;
 `;
 
 interface IUserRowProsp {
-	__typename?: "User" | undefined;
-	username?: string | undefined;
-	avatar?: string | null | undefined;
-	isFollowing?: boolean | undefined;
-	isMe?: boolean | undefined;
+	__typename?: "User";
+	id: number;
+	username: string;
+	avatar?: string | null;
+	isFollowing: boolean;
+	isMe: boolean;
+	navigation: NativeStackNavigationProp<StackNavFactoryParamList>;
 }
 
-const UserRow = ({ username, avatar, isFollowing, isMe }: IUserRowProsp) => {
+const UserRow = ({
+	id,
+	username,
+	avatar,
+	isFollowing,
+	isMe,
+	navigation,
+}: IUserRowProsp) => {
 	const { width: screenWidth } = useWindowDimensions();
 	const { data: userData } = useUser();
 	const [followUser] = useFollowUserMutation({
@@ -105,7 +114,7 @@ const UserRow = ({ username, avatar, isFollowing, isMe }: IUserRowProsp) => {
 	});
 	return (
 		<Container width={screenWidth}>
-			<UserInfoBox>
+			<UserInfoBox onPress={() => goToProfile({ navigation, username, id })}>
 				<UserAvatar
 					resizeMode="cover"
 					source={{

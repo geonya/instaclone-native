@@ -25,6 +25,7 @@ const COMMENT_FRAGMENT = gql`
 
 const USER_FRAGMENT = gql`
 	fragment User_Fragment on User {
+		id
 		username
 		avatar
 		isFollowing

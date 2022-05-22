@@ -9,7 +9,11 @@ import { ApolloProvider, useReactiveVar } from "@apollo/client";
 import client, { cache, isLoggedInVar, tokenVar } from "./apollo";
 import LoggedInNav from "./navigators/LoggedInNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageWrapper, persistCache } from "apollo3-cache-persist";
+import {
+	AsyncStorageWrapper,
+	CachePersistor,
+	persistCache,
+} from "apollo3-cache-persist";
 
 export default function App() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -26,15 +30,17 @@ export default function App() {
 	};
 	const preLoad = async () => {
 		const token = await AsyncStorage.getItem("token");
+		const cachePersistor = new CachePersistor({
+			cache,
+			storage: new AsyncStorageWrapper(AsyncStorage),
+		});
 		if (token) {
 			isLoggedInVar(true);
 			tokenVar(token);
 		}
 		try {
-			await persistCache({
-				cache: cache,
-				storage: new AsyncStorageWrapper(AsyncStorage),
-			});
+			await cachePersistor.restore();
+			// perge() 시 저장된 cache 모두 삭제
 		} catch (err) {
 			console.error(err);
 		}

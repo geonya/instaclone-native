@@ -324,7 +324,7 @@ export type PhotoFragmentFragment = { __typename?: 'Photo', id: number, file: st
 
 export type Comment_FragmentFragment = { __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } };
 
-export type User_FragmentFragment = { __typename?: 'User', username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean };
+export type User_FragmentFragment = { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean };
 
 export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -336,21 +336,21 @@ export type SeeFeedQueryVariables = Exact<{
 }>;
 
 
-export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', caption?: string | null, createdAt: string, isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, user: { __typename?: 'User', username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null> | null };
+export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', caption?: string | null, createdAt: string, isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null> | null };
 
 export type SeeProfileQueryVariables = Exact<{
   username: Scalars['String'];
 }>;
 
 
-export type SeeProfileQuery = { __typename?: 'Query', seeProfile?: { __typename?: 'User', firstName: string, lastName?: string | null, bio?: string | null, totalFollowing: number, totalFollowers: number, isFollowing: boolean, isMe: boolean, username: string, avatar?: string | null, photos?: Array<{ __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean } | null> | null } | null };
+export type SeeProfileQuery = { __typename?: 'Query', seeProfile?: { __typename?: 'User', firstName: string, lastName?: string | null, bio?: string | null, totalFollowing: number, totalFollowers: number, isFollowing: boolean, isMe: boolean, id: number, username: string, avatar?: string | null, photos?: Array<{ __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean } | null> | null } | null };
 
 export type SeePhotoLikesQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type SeePhotoLikesQuery = { __typename?: 'Query', seePhotoLikes?: Array<{ __typename?: 'User', username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean } | null> | null };
+export type SeePhotoLikesQuery = { __typename?: 'Query', seePhotoLikes?: Array<{ __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean } | null> | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -430,6 +430,7 @@ export const Comment_FragmentFragmentDoc = gql`
     `;
 export const User_FragmentFragmentDoc = gql`
     fragment User_Fragment on User {
+  id
   username
   avatar
   isFollowing

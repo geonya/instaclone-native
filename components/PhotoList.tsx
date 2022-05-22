@@ -7,6 +7,7 @@ import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 import { Ionicons } from "@expo/vector-icons";
 import { useToggleLikeMutation } from "../generated/graphql";
 import { UserAvatar, UserInfoBox, Username } from "./sharedStyles";
+import { goToProfile } from "./sharedFunction";
 
 const Container = styled.View``;
 
@@ -45,7 +46,12 @@ interface IPhotoProps {
 	likes: number;
 	commentsCount: number;
 	isLiked: boolean;
-	user: { __typename?: "User"; username: string; avatar?: string | null };
+	user: {
+		__typename?: "User";
+		id: number;
+		username: string;
+		avatar?: string | null;
+	};
 	comments?: Array<{
 		__typename?: "Comment";
 		id: number;
@@ -65,10 +71,8 @@ const PhotoList = ({
 	commentsCount,
 	comments,
 }: IPhotoProps) => {
-	const navigation: NativeStackNavigationProp<
-		StackNavFactoryParamList,
-		"Feed"
-	> = useNavigation();
+	const navigation: NativeStackNavigationProp<StackNavFactoryParamList> =
+		useNavigation();
 	const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 	const [imageHeight, setImageHeight] = useState(screenHeight - 450);
 	useEffect(() => {
@@ -90,9 +94,14 @@ const PhotoList = ({
 			});
 		},
 	});
+
 	return (
 		<Container>
-			<UserInfoBox onPress={() => navigation.navigate("Profile")}>
+			<UserInfoBox
+				onPress={() =>
+					goToProfile({ navigation, username: user.username, id: user.id })
+				}
+			>
 				<UserAvatar
 					resizeMode="cover"
 					source={{
@@ -130,7 +139,11 @@ const PhotoList = ({
 					<Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
 				</TouchableOpacity>
 				<Caption>
-					<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+					<TouchableOpacity
+						onPress={() =>
+							goToProfile({ navigation, username: user.username, id: user.id })
+						}
+					>
 						<Username>{user.username}</Username>
 					</TouchableOpacity>
 					<CaptionText>{caption}</CaptionText>
