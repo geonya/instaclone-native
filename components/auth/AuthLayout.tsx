@@ -1,10 +1,6 @@
-import {
-	Keyboard,
-	KeyboardAvoidingView,
-	Platform,
-	TouchableWithoutFeedback,
-} from "react-native";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import styled from "styled-components/native";
+import DismissKeyBoard from "../DismissKeyBoard";
 
 const Container = styled.View`
 	flex: 1;
@@ -31,15 +27,8 @@ interface IAuthLayoutProps {
 	children: React.ReactNode;
 }
 const AuthLayOut = ({ children }: IAuthLayoutProps) => {
-	const dismissKeyboard = () => {
-		Keyboard.dismiss();
-	};
 	return (
-		<TouchableWithoutFeedback
-			style={{ flex: 1 }}
-			onPress={dismissKeyboard}
-			disabled={Platform.OS === "web"}
-		>
+		<DismissKeyBoard>
 			<Container>
 				<KeyboardAvoidingView
 					style={{
@@ -57,7 +46,7 @@ const AuthLayOut = ({ children }: IAuthLayoutProps) => {
 					</Wrapper>
 				</KeyboardAvoidingView>
 			</Container>
-		</TouchableWithoutFeedback>
+		</DismissKeyBoard>
 	);
 };
 
