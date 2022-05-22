@@ -1,6 +1,16 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
-
-const Me = () => {
+import useMe from "../components/hooks/useMe";
+import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+type MeProps = NativeStackScreenProps<StackNavFactoryParamList, "Me">;
+const Me = ({ navigation }: MeProps) => {
+	const { data } = useMe();
+	useEffect(() => {
+		navigation.setOptions({
+			title: `${data?.seeMe?.username}`,
+		});
+	}, [data]);
 	return (
 		<View
 			style={{
@@ -10,7 +20,7 @@ const Me = () => {
 				justifyContent: "center",
 			}}
 		>
-			<Text style={{ color: "white" }}>Me</Text>
+			<Text style={{ color: "white" }}>{data?.seeMe?.username}</Text>
 		</View>
 	);
 };

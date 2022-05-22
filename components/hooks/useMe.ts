@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { logUserOut, tokenVar } from "../../apollo";
 import { useSeeMeQuery } from "../../generated/graphql";
 
-const useUser = () => {
+const useMe = () => {
 	const hasToken = useReactiveVar(tokenVar);
 	const { data } = useSeeMeQuery({ skip: !hasToken });
 	useEffect(() => {
@@ -14,4 +14,4 @@ const useUser = () => {
 	};
 };
 
-export default useUser;
+export default useMe;

@@ -6,7 +6,7 @@ import {
 	useUnfollowUserMutation,
 } from "../generated/graphql";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
-import useUser from "./hooks/useUser";
+import useMe from "./hooks/useMe";
 import { goToProfile } from "./sharedFunction";
 import { UserAvatar, UserInfoBox, Username } from "./sharedStyles";
 
@@ -49,7 +49,7 @@ const UserRow = ({
 	navigation,
 }: IUserRowProsp) => {
 	const { width: screenWidth } = useWindowDimensions();
-	const { data: userData } = useUser();
+	const { data: userData } = useMe();
 	const [followUser] = useFollowUserMutation({
 		variables: {
 			username: username!,
