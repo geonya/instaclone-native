@@ -40,7 +40,7 @@ export default function App() {
 		}
 		try {
 			await cachePersistor.restore();
-			// perge() 시 저장된 cache 모두 삭제
+			// purge() 시 저장된 cache 모두 삭제
 		} catch (err) {
 			console.error(err);
 		}

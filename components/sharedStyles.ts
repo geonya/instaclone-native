@@ -1,9 +1,9 @@
 import styled from "styled-components/native";
 
-export const UserAvatar = styled.Image`
-	width: 40px;
-	height: 40px;
-	border-radius: 20px;
+export const UserAvatar = styled.Image<{ size: number }>`
+	width: ${(props) => `${props.size}px`};
+	height: ${(props) => `${props.size}px`};
+	border-radius: ${(props) => `${props.size / 2}px`};
 	margin-right: 10px;
 `;
 

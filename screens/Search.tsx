@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import DismissKeyBoard from "../components/DismissKeyBoard";
+import { useSearchPhotosLazyQuery } from "../generated/graphql";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
 type SearchScreenProps = NativeStackScreenProps<
@@ -19,7 +20,8 @@ const SearchInput = styled.TextInput`
 `;
 
 const Search = ({ navigation }: SearchScreenProps) => {
-	const { register, setValue, watch } = useForm<SearchFormValue>();
+	const { register, setValue, getValues } = useForm<SearchFormValue>();
+	const [startQueryFn, { loading, data }] = useSearchPhotosLazyQuery();
 	const SearchBox = () => (
 		<SearchInput
 			onChangeText={(text) => setValue("keyword", text)}
@@ -29,8 +31,16 @@ const Search = ({ navigation }: SearchScreenProps) => {
 			returnKeyType="search"
 			autoCorrect={false}
 			autoCapitalize="none"
+			onSubmitEditing={() =>
+				startQueryFn({
+					variables: {
+						keyword: getValues("keyword"),
+					},
+				})
+			}
 		/>
 	);
+	console.log(getValues("keyword"));
 	useEffect(() => {
 		navigation.setOptions({
 			headerTitle: SearchBox,

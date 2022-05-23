@@ -83,6 +83,12 @@ query SeePhotoLikes($id: Int!) {
   }
 	${USER_FRAGMENT}
 }
+query SearchPhotos($keyword: String!) {
+  searchPhotos(keyword: $keyword) {
+    id
+    file
+  }
+}
 `;
 
 // Mutation

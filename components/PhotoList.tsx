@@ -103,6 +103,7 @@ const PhotoList = ({
 				}
 			>
 				<UserAvatar
+					size={35}
 					resizeMode="cover"
 					source={{
 						uri:

@@ -116,6 +116,7 @@ const UserRow = ({
 		<Container width={screenWidth}>
 			<UserInfoBox onPress={() => goToProfile({ navigation, username, id })}>
 				<UserAvatar
+					size={40}
 					resizeMode="cover"
 					source={{
 						uri:
