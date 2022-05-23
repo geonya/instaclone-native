@@ -39,7 +39,7 @@ export default function App() {
 			tokenVar(token);
 		}
 		try {
-			await cachePersistor.restore();
+			// await cachePersistor.restore();
 			// purge() 시 저장된 cache 모두 삭제
 		} catch (err) {
 			console.error(err);

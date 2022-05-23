@@ -1,7 +1,15 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import {
+	ActivityIndicator,
+	FlatList,
+	Image,
+	Text,
+	TouchableOpacity,
+	useWindowDimensions,
+	View,
+} from "react-native";
 import styled from "styled-components/native";
 import DismissKeyBoard from "../components/DismissKeyBoard";
 import { useSearchPhotosLazyQuery } from "../generated/graphql";
@@ -15,8 +23,12 @@ interface SearchFormValue {
 	keyword: string;
 }
 
-const SearchInput = styled.TextInput`
-	background-color: white;
+const SearchInput = styled.TextInput<{ width: number }>`
+	width: ${(props) => props.width / 1.5}px;
+	color: black;
+	background-color: rgba(255, 255, 255, 0.9);
+	padding: 5px 10px;
+	border-radius: 7px; ;
 `;
 
 const MessageContainer = styled.View`
@@ -33,6 +45,8 @@ const MessageText = styled.Text`
 `;
 
 const Search = ({ navigation }: SearchScreenProps) => {
+	const NUM_COLUMS = 4;
+	const { width: screenWidth, height: sreenHeight } = useWindowDimensions();
 	const { register, setValue, handleSubmit } = useForm<SearchFormValue>();
 	const [startQueryFn, { loading, data, called }] = useSearchPhotosLazyQuery();
 	const onValid: SubmitHandler<SearchFormValue> = ({ keyword }) => {
@@ -44,9 +58,10 @@ const Search = ({ navigation }: SearchScreenProps) => {
 	};
 	const SearchBox = () => (
 		<SearchInput
+			width={screenWidth}
 			onChangeText={(text) => setValue("keyword", text)}
-			placeholderTextColor="gray"
 			placeholder="Search Photos"
+			placeholderTextColor="rgba(0,0,0,0.8)"
 			returnKeyLabel="Search"
 			returnKeyType="search"
 			autoCorrect={false}
@@ -54,14 +69,12 @@ const Search = ({ navigation }: SearchScreenProps) => {
 			onSubmitEditing={handleSubmit(onValid)}
 		/>
 	);
-
 	useEffect(() => {
 		navigation.setOptions({
 			headerTitle: SearchBox,
 		});
 		register("keyword", { required: true, minLength: 2 });
 	}, []);
-	console.log(data);
 	return (
 		<DismissKeyBoard>
 			<View
@@ -83,11 +96,26 @@ const Search = ({ navigation }: SearchScreenProps) => {
 						<MessageText>Search by keyword...</MessageText>
 					</MessageContainer>
 				) : null}
-				{data?.searchPhotos !== undefined &&
-				data?.searchPhotos?.length === 0 ? (
-					<MessageContainer>
-						<MessageText>Could not find anything...</MessageText>
-					</MessageContainer>
+				{data?.searchPhotos !== undefined ? (
+					data?.searchPhotos?.length === 0 ? (
+						<MessageContainer>
+							<MessageText>Could not find anything...</MessageText>
+						</MessageContainer>
+					) : (
+						<FlatList
+							numColumns={NUM_COLUMS}
+							data={data?.searchPhotos}
+							keyExtractor={(_, i) => i + ""}
+							renderItem={({ item }) => (
+								<TouchableOpacity>
+									<Image
+										source={{ uri: item?.file }}
+										style={{ width: screenWidth / NUM_COLUMS, height: 100 }}
+									/>
+								</TouchableOpacity>
+							)}
+						/>
+					)
 				) : null}
 			</View>
 		</DismissKeyBoard>
