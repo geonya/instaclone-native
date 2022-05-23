@@ -1,5 +1,15 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import {
+	RefreshControl,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
+import PhotoBox from "../components/PhotoBox";
+import ScreenLayout from "../components/ScreenLayout";
+import { useSeePhotoQuery } from "../generated/graphql";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
 type SearchScreenProps = NativeStackScreenProps<
@@ -7,20 +17,34 @@ type SearchScreenProps = NativeStackScreenProps<
 	"Photo"
 >;
 
-const Photo = ({ navigation }: SearchScreenProps) => {
+const Photo = ({ navigation, route }: SearchScreenProps) => {
+	const { data, loading, refetch } = useSeePhotoQuery({
+		variables: {
+			id: route?.params?.photoId,
+		},
+	});
+	const [refreshing, setRefreshing] = useState(false);
+	const onRefresh = async () => {
+		setRefreshing(true);
+		await refetch();
+		setRefreshing(false);
+	};
 	return (
-		<View
-			style={{
-				backgroundColor: "black",
-				flex: 1,
-				alignItems: "center",
-				justifyContent: "center",
-			}}
-		>
-			<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-				<Text style={{ color: "white" }}>Go To Profile</Text>
-			</TouchableOpacity>
-		</View>
+		<ScreenLayout loading={loading}>
+			<ScrollView
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+				style={{ backgroundColor: "black" }}
+				contentContainerStyle={{
+					backgroundColor: "black",
+					flex: 1,
+					alignItems: "center",
+				}}
+			>
+				<PhotoBox {...data?.seePhoto!} fullView />
+			</ScrollView>
+		</ScreenLayout>
 	);
 };
 

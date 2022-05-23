@@ -12,13 +12,11 @@ import {
 } from "react-native";
 import styled from "styled-components/native";
 import DismissKeyBoard from "../components/DismissKeyBoard";
+import { goToPhoto } from "../components/sharedFunction";
 import { useSearchPhotosLazyQuery } from "../generated/graphql";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
-type SearchScreenProps = NativeStackScreenProps<
-	StackNavFactoryParamList,
-	"Search"
->;
+type SearchScreenProps = NativeStackScreenProps<StackNavFactoryParamList>;
 interface SearchFormValue {
 	keyword: string;
 }
@@ -107,7 +105,9 @@ const Search = ({ navigation }: SearchScreenProps) => {
 							data={data?.searchPhotos}
 							keyExtractor={(_, i) => i + ""}
 							renderItem={({ item }) => (
-								<TouchableOpacity>
+								<TouchableOpacity
+									onPress={() => goToPhoto({ navigation, photoId: item?.id! })}
+								>
 									<Image
 										source={{ uri: item?.file }}
 										style={{ width: screenWidth / NUM_COLUMS, height: 100 }}

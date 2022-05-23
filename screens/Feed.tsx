@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { FlatList } from "react-native";
-import PhotoList from "../components/PhotoList";
+import PhotoBox from "../components/PhotoBox";
 import ScreenLayout from "../components/ScreenLayout";
 import { useSeeFeedQuery } from "../generated/graphql";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
@@ -37,7 +37,7 @@ const Feed = ({ navigation }: FeedScreenProps) => {
 				data={data?.seeFeed}
 				keyExtractor={(_, i) => i + ""}
 				renderItem={({ item }) => {
-					return <PhotoList {...item!} />;
+					return <PhotoBox {...item!} />;
 				}}
 				showsVerticalScrollIndicator={false}
 			/>

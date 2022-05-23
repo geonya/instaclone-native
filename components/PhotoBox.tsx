@@ -1,7 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
-import { Image, TouchableOpacity, useWindowDimensions } from "react-native";
+import {
+	Image,
+	Text,
+	TouchableOpacity,
+	useWindowDimensions,
+} from "react-native";
 import styled from "styled-components/native";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 import { Ionicons } from "@expo/vector-icons";
@@ -36,21 +41,23 @@ const ExtraContainer = styled.View`
 	padding: 10px;
 `;
 
-interface IPhotoProps {
+interface IPhotoBoxProps {
 	__typename?: "Photo";
-	caption?: string | null;
-	createdAt: string;
 	isMine: boolean;
 	id: number;
 	file: string;
 	likes: number;
 	commentsCount: number;
 	isLiked: boolean;
+	caption?: string | null;
+	createdAt: string;
 	user: {
 		__typename?: "User";
 		id: number;
 		username: string;
 		avatar?: string | null;
+		isFollowing: boolean;
+		isMe: boolean;
 	};
 	comments?: Array<{
 		__typename?: "Comment";
@@ -60,8 +67,9 @@ interface IPhotoProps {
 		createdAt: string;
 		user: { __typename?: "User"; username: string; avatar?: string | null };
 	} | null> | null;
+	fullView?: boolean;
 }
-const PhotoList = ({
+const PhotoBox = ({
 	id,
 	user,
 	file,
@@ -70,7 +78,8 @@ const PhotoList = ({
 	caption,
 	commentsCount,
 	comments,
-}: IPhotoProps) => {
+	fullView,
+}: IPhotoBoxProps) => {
 	const navigation: NativeStackNavigationProp<StackNavFactoryParamList> =
 		useNavigation();
 	const { width: screenWidth, height: screenHeight } = useWindowDimensions();
@@ -99,7 +108,7 @@ const PhotoList = ({
 		<Container>
 			<UserInfoBox
 				onPress={() =>
-					goToProfile({ navigation, username: user.username, id: user.id })
+					goToProfile({ navigation, username: user.username, userId: user.id })
 				}
 			>
 				<UserAvatar
@@ -142,16 +151,21 @@ const PhotoList = ({
 				<Caption>
 					<TouchableOpacity
 						onPress={() =>
-							goToProfile({ navigation, username: user.username, id: user.id })
+							goToProfile({
+								navigation,
+								username: user.username,
+								userId: user.id,
+							})
 						}
 					>
 						<Username>{user.username}</Username>
 					</TouchableOpacity>
 					<CaptionText>{caption}</CaptionText>
 				</Caption>
+				{fullView && <Text style={{ color: "white" }}>Comments</Text>}
 			</ExtraContainer>
 		</Container>
 	);
 };
 
-export default PhotoList;
+export default PhotoBox;

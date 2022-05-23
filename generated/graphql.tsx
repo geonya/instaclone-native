@@ -320,7 +320,7 @@ export type User = {
   username: Scalars['String'];
 };
 
-export type PhotoFragmentFragment = { __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean };
+export type PhotoFragmentFragment = { __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, caption?: string | null, createdAt: string };
 
 export type Comment_FragmentFragment = { __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } };
 
@@ -336,14 +336,14 @@ export type SeeFeedQueryVariables = Exact<{
 }>;
 
 
-export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', caption?: string | null, createdAt: string, isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null> | null };
+export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, caption?: string | null, createdAt: string, user: { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null> | null };
 
 export type SeeProfileQueryVariables = Exact<{
   username: Scalars['String'];
 }>;
 
 
-export type SeeProfileQuery = { __typename?: 'Query', seeProfile?: { __typename?: 'User', firstName: string, lastName?: string | null, bio?: string | null, totalFollowing: number, totalFollowers: number, isFollowing: boolean, isMe: boolean, id: number, username: string, avatar?: string | null, photos?: Array<{ __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean } | null> | null } | null };
+export type SeeProfileQuery = { __typename?: 'Query', seeProfile?: { __typename?: 'User', firstName: string, lastName?: string | null, bio?: string | null, totalFollowing: number, totalFollowers: number, isFollowing: boolean, isMe: boolean, id: number, username: string, avatar?: string | null, photos?: Array<{ __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, caption?: string | null, createdAt: string } | null> | null } | null };
 
 export type SeePhotoLikesQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -358,6 +358,13 @@ export type SearchPhotosQueryVariables = Exact<{
 
 
 export type SearchPhotosQuery = { __typename?: 'Query', searchPhotos?: Array<{ __typename?: 'Photo', id: number, file: string } | null> | null };
+
+export type SeePhotoQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type SeePhotoQuery = { __typename?: 'Query', seePhoto?: { __typename?: 'Photo', isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, caption?: string | null, createdAt: string, user: { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -421,6 +428,8 @@ export const PhotoFragmentFragmentDoc = gql`
   likes
   commentsCount
   isLiked
+  caption
+  createdAt
 }
     `;
 export const Comment_FragmentFragmentDoc = gql`
@@ -488,10 +497,8 @@ export const SeeFeedDocument = gql`
     comments {
       ...Comment_Fragment
     }
-    caption
-    createdAt
-    isMine
     ...PhotoFragment
+    isMine
   }
 }
     ${User_FragmentFragmentDoc}
@@ -642,6 +649,50 @@ export function useSearchPhotosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type SearchPhotosQueryHookResult = ReturnType<typeof useSearchPhotosQuery>;
 export type SearchPhotosLazyQueryHookResult = ReturnType<typeof useSearchPhotosLazyQuery>;
 export type SearchPhotosQueryResult = Apollo.QueryResult<SearchPhotosQuery, SearchPhotosQueryVariables>;
+export const SeePhotoDocument = gql`
+    query SeePhoto($id: Int!) {
+  seePhoto(id: $id) {
+    user {
+      ...User_Fragment
+    }
+    comments {
+      ...Comment_Fragment
+    }
+    ...PhotoFragment
+    isMine
+  }
+}
+    ${User_FragmentFragmentDoc}
+${Comment_FragmentFragmentDoc}
+${PhotoFragmentFragmentDoc}`;
+
+/**
+ * __useSeePhotoQuery__
+ *
+ * To run a query within a React component, call `useSeePhotoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeePhotoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeePhotoQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSeePhotoQuery(baseOptions: Apollo.QueryHookOptions<SeePhotoQuery, SeePhotoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeePhotoQuery, SeePhotoQueryVariables>(SeePhotoDocument, options);
+      }
+export function useSeePhotoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeePhotoQuery, SeePhotoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeePhotoQuery, SeePhotoQueryVariables>(SeePhotoDocument, options);
+        }
+export type SeePhotoQueryHookResult = ReturnType<typeof useSeePhotoQuery>;
+export type SeePhotoLazyQueryHookResult = ReturnType<typeof useSeePhotoLazyQuery>;
+export type SeePhotoQueryResult = Apollo.QueryResult<SeePhotoQuery, SeePhotoQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {

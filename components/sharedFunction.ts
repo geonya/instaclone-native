@@ -1,13 +1,26 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
-interface IgoToProfileProps {
+interface IGoToProfileProps {
 	navigation: NativeStackNavigationProp<StackNavFactoryParamList>;
 	username: string;
-	id: number;
+	userId: number;
 }
-export const goToProfile = ({ navigation, username, id }: IgoToProfileProps) =>
+export const goToProfile = ({
+	navigation,
+	username,
+	userId,
+}: IGoToProfileProps) =>
 	navigation.navigate("Profile", {
 		username,
-		id,
+		userId,
+	});
+
+interface IGotoPhotoProps {
+	navigation: NativeStackNavigationProp<StackNavFactoryParamList>;
+	photoId: number;
+}
+export const goToPhoto = ({ navigation, photoId }: IGotoPhotoProps) =>
+	navigation.navigate("Photo", {
+		photoId,
 	});

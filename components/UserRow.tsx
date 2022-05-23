@@ -114,7 +114,9 @@ const UserRow = ({
 	});
 	return (
 		<Container width={screenWidth}>
-			<UserInfoBox onPress={() => goToProfile({ navigation, username, id })}>
+			<UserInfoBox
+				onPress={() => goToProfile({ navigation, username, userId: id })}
+			>
 				<UserAvatar
 					size={40}
 					resizeMode="cover"

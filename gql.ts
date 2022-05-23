@@ -7,6 +7,8 @@ const PHOTO_FRAGMENT = gql`
 		likes
 		commentsCount
 		isLiked
+		caption
+		createdAt
 	}
 `;
 
@@ -50,10 +52,8 @@ gql`
 			comments {
 				...Comment_Fragment
 			}
-			caption
-			createdAt
-			isMine
 			...PhotoFragment
+			isMine
 		}
 		${USER_FRAGMENT}
 		${PHOTO_FRAGMENT}
@@ -88,6 +88,21 @@ query SearchPhotos($keyword: String!) {
     id
     file
   }
+}
+query SeePhoto($id: Int!) {
+  seePhoto(id: $id) {
+    user {
+				...User_Fragment
+			}
+			comments {
+				...Comment_Fragment
+			}
+			...PhotoFragment
+			isMine
+	}
+	${USER_FRAGMENT}
+	${PHOTO_FRAGMENT}
+	${COMMENT_FRAGMENT}
 }
 `;
 
