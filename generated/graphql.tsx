@@ -291,6 +291,7 @@ export type Room = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  followUpdates?: Maybe<FollowUpdatesResult>;
   roomUpdates?: Maybe<Message>;
 };
 
@@ -316,20 +317,33 @@ export type User = {
   photos?: Maybe<Array<Maybe<Photo>>>;
   totalFollowers: Scalars['Int'];
   totalFollowing: Scalars['Int'];
+  totalPhotos: Scalars['Int'];
   updatedAt: Scalars['String'];
   username: Scalars['String'];
 };
+
+export type FollowUpdatesResult = {
+  __typename?: 'followUpdatesResult';
+  avatar?: Maybe<Scalars['String']>;
+  followerName: Scalars['String'];
+  targetName: Scalars['String'];
+};
+
+export type User_FragmentFragment = { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean };
 
 export type PhotoFragmentFragment = { __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, caption?: string | null, createdAt: string };
 
 export type Comment_FragmentFragment = { __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } };
 
-export type User_FragmentFragment = { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean };
-
 export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeeMeQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean } | null };
+export type SeeMeQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', id: number, bio?: string | null, totalPhotos: number, totalFollowing: number, totalFollowers: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean } | null };
+
+export type SeeMyPhotosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SeeMyPhotosQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', photos?: Array<{ __typename?: 'Photo', id: number, file: string } | null> | null } | null };
 
 export type SeeFeedQueryVariables = Exact<{
   offset: Scalars['Int'];
@@ -421,6 +435,20 @@ export type UnfollowUserMutationVariables = Exact<{
 
 export type UnfollowUserMutation = { __typename?: 'Mutation', unfollowUser?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
 
+export type FollowUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FollowUpdatesSubscription = { __typename?: 'Subscription', followUpdates?: { __typename?: 'followUpdatesResult', targetName: string, followerName: string, avatar?: string | null } | null };
+
+export const User_FragmentFragmentDoc = gql`
+    fragment User_Fragment on User {
+  id
+  username
+  avatar
+  isFollowing
+  isMe
+}
+    `;
 export const PhotoFragmentFragmentDoc = gql`
     fragment PhotoFragment on Photo {
   id
@@ -444,19 +472,14 @@ export const Comment_FragmentFragmentDoc = gql`
   createdAt
 }
     `;
-export const User_FragmentFragmentDoc = gql`
-    fragment User_Fragment on User {
-  id
-  username
-  avatar
-  isFollowing
-  isMe
-}
-    `;
 export const SeeMeDocument = gql`
-    query seeMe {
+    query SeeMe {
   seeMe {
     id
+    bio
+    totalPhotos
+    totalFollowing
+    totalFollowers
     ...User_Fragment
   }
 }
@@ -488,6 +511,43 @@ export function useSeeMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeM
 export type SeeMeQueryHookResult = ReturnType<typeof useSeeMeQuery>;
 export type SeeMeLazyQueryHookResult = ReturnType<typeof useSeeMeLazyQuery>;
 export type SeeMeQueryResult = Apollo.QueryResult<SeeMeQuery, SeeMeQueryVariables>;
+export const SeeMyPhotosDocument = gql`
+    query SeeMyPhotos {
+  seeMe {
+    photos {
+      id
+      file
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeeMyPhotosQuery__
+ *
+ * To run a query within a React component, call `useSeeMyPhotosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeMyPhotosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeMyPhotosQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSeeMyPhotosQuery(baseOptions?: Apollo.QueryHookOptions<SeeMyPhotosQuery, SeeMyPhotosQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeMyPhotosQuery, SeeMyPhotosQueryVariables>(SeeMyPhotosDocument, options);
+      }
+export function useSeeMyPhotosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeMyPhotosQuery, SeeMyPhotosQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeMyPhotosQuery, SeeMyPhotosQueryVariables>(SeeMyPhotosDocument, options);
+        }
+export type SeeMyPhotosQueryHookResult = ReturnType<typeof useSeeMyPhotosQuery>;
+export type SeeMyPhotosLazyQueryHookResult = ReturnType<typeof useSeeMyPhotosLazyQuery>;
+export type SeeMyPhotosQueryResult = Apollo.QueryResult<SeeMyPhotosQuery, SeeMyPhotosQueryVariables>;
 export const SeeFeedDocument = gql`
     query SeeFeed($offset: Int!) {
   seeFeed(offset: $offset) {
@@ -946,3 +1006,34 @@ export function useUnfollowUserMutation(baseOptions?: Apollo.MutationHookOptions
 export type UnfollowUserMutationHookResult = ReturnType<typeof useUnfollowUserMutation>;
 export type UnfollowUserMutationResult = Apollo.MutationResult<UnfollowUserMutation>;
 export type UnfollowUserMutationOptions = Apollo.BaseMutationOptions<UnfollowUserMutation, UnfollowUserMutationVariables>;
+export const FollowUpdatesDocument = gql`
+    subscription FollowUpdates {
+  followUpdates {
+    targetName
+    followerName
+    avatar
+  }
+}
+    `;
+
+/**
+ * __useFollowUpdatesSubscription__
+ *
+ * To run a query within a React component, call `useFollowUpdatesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useFollowUpdatesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFollowUpdatesSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFollowUpdatesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<FollowUpdatesSubscription, FollowUpdatesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<FollowUpdatesSubscription, FollowUpdatesSubscriptionVariables>(FollowUpdatesDocument, options);
+      }
+export type FollowUpdatesSubscriptionHookResult = ReturnType<typeof useFollowUpdatesSubscription>;
+export type FollowUpdatesSubscriptionResult = Apollo.SubscriptionResult<FollowUpdatesSubscription>;

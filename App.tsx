@@ -28,10 +28,10 @@ export default function App() {
 	useEffect(() => {
 		const preLoad = async () => {
 			const token = await AsyncStorage.getItem("token");
-			const cachePersistor = new CachePersistor({
-				cache,
-				storage: new AsyncStorageWrapper(AsyncStorage),
-			});
+			// const cachePersistor = new CachePersistor({
+			// 	cache,
+			// 	storage: new AsyncStorageWrapper(AsyncStorage),
+			// });
 			if (token) {
 				isLoggedInVar(true);
 				tokenVar(token);
@@ -39,7 +39,7 @@ export default function App() {
 			try {
 				await SplashScreen.preventAutoHideAsync();
 				preLoadAssets();
-				await cachePersistor.restore();
+				// await cachePersistor.restore();
 				// purge() 시 저장된 cache 모두 삭제
 			} catch (err) {
 				console.error(err);

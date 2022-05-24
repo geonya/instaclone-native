@@ -1,5 +1,15 @@
 import { gql } from "@apollo/client";
 
+const USER_FRAGMENT = gql`
+	fragment User_Fragment on User {
+		id
+		username
+		avatar
+		isFollowing
+		isMe
+	}
+`;
+
 const PHOTO_FRAGMENT = gql`
 	fragment PhotoFragment on Photo {
 		id
@@ -25,25 +35,26 @@ const COMMENT_FRAGMENT = gql`
 	}
 `;
 
-const USER_FRAGMENT = gql`
-	fragment User_Fragment on User {
-		id
-		username
-		avatar
-		isFollowing
-		isMe
-	}
-`;
-
 gql`
-	query seeMe {
+	query SeeMe {
 		seeMe {
 			id
+			bio
+			totalPhotos
+			totalFollowing
+			totalFollowers
 			...User_Fragment
 		}
 		${USER_FRAGMENT}
 	}
-	
+	query SeeMyPhotos {
+		seeMe {
+			photos {
+				id
+				file
+			}
+		}
+	}
 	query SeeFeed($offset: Int!) {
 		seeFeed(offset:$offset) {
 			user {
@@ -163,6 +174,16 @@ gql`
 		unfollowUser(username: $username) {
 			ok
 			error
+		}
+	}
+`;
+
+gql`
+	subscription FollowUpdates {
+		followUpdates {
+			targetName
+			followerName
+			avatar
 		}
 	}
 `;

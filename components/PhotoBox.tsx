@@ -11,7 +11,7 @@ import styled from "styled-components/native";
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 import { Ionicons } from "@expo/vector-icons";
 import { useToggleLikeMutation } from "../generated/graphql";
-import { UserAvatar, UserInfoBox, Username } from "./sharedStyles";
+import { UserAvatar, UserInfoBox, FatText } from "./sharedStyles";
 import { goToProfile } from "./sharedFunction";
 
 const Container = styled.View``;
@@ -120,7 +120,7 @@ const PhotoBox = ({
 							"https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png",
 					}}
 				/>
-				<Username>{user.username}</Username>
+				<FatText>{user.username}</FatText>
 			</UserInfoBox>
 			<File
 				resizeMode="cover"
@@ -158,7 +158,7 @@ const PhotoBox = ({
 							})
 						}
 					>
-						<Username>{user.username}</Username>
+						<FatText>{user.username}</FatText>
 					</TouchableOpacity>
 					<CaptionText>{caption}</CaptionText>
 				</Caption>

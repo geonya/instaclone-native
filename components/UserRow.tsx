@@ -8,7 +8,7 @@ import {
 import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 import useMe from "./hooks/useMe";
 import { goToProfile } from "./sharedFunction";
-import { UserAvatar, UserInfoBox, Username } from "./sharedStyles";
+import { UserAvatar, UserInfoBox, FatText } from "./sharedStyles";
 
 const Container = styled.View<{ width: number }>`
 	padding: 5px 0;
@@ -126,7 +126,7 @@ const UserRow = ({
 							"https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png",
 					}}
 				/>
-				<Username>{username}</Username>
+				<FatText>{username}</FatText>
 			</UserInfoBox>
 			{!isMe ? (
 				isFollowing ? (

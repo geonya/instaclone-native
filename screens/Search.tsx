@@ -5,7 +5,6 @@ import {
 	ActivityIndicator,
 	FlatList,
 	Image,
-	Text,
 	TouchableOpacity,
 	useWindowDimensions,
 	View,
@@ -79,7 +78,6 @@ const Search = ({ navigation }: SearchScreenProps) => {
 				style={{
 					backgroundColor: "black",
 					flex: 1,
-					alignItems: "center",
 					justifyContent: "center",
 				}}
 			>

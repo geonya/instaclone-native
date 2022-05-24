@@ -13,7 +13,6 @@ const ScreenLayout = ({ loading, children }: IScreenLayoutProps) => {
 				backgroundColor: "black",
 				flex: 1,
 				alignItems: "center",
-				justifyContent: "center",
 			}}
 		>
 			{loading ? <ActivityIndicator color="white" /> : children}

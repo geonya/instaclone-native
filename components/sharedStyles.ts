@@ -7,7 +7,7 @@ export const UserAvatar = styled.Image<{ size: number }>`
 	margin-right: 10px;
 `;
 
-export const Username = styled.Text`
+export const FatText = styled.Text`
 	color: white;
 	font-weight: 600;
 `;
