@@ -1,6 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useWindowDimensions } from "react-native";
 import styled from "styled-components/native";
+import { colors } from "../colors";
 import {
 	useFollowUserMutation,
 	useUnfollowUserMutation,
@@ -18,7 +19,7 @@ const Container = styled.View<{ width: number }>`
 `;
 
 const FollowBtn = styled.TouchableOpacity`
-	background-color: #0095f6;
+	background-color: ${colors.blue};
 	border-radius: 3px;
 	padding: 5px 16px;
 	justify-content: center;

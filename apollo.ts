@@ -63,6 +63,7 @@ const wsLink = new GraphQLWsLink(
 	})
 );
 
+// http - ws url 전환용
 const splitLink = split(
 	({ query }) => {
 		const definition = getMainDefinition(query);
@@ -89,7 +90,7 @@ export const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-	link: splitLink,
+	link: authHttpLink,
 	cache,
 });
 
