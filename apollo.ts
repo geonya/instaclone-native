@@ -14,6 +14,7 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
+import { createUploadLink } from "apollo-upload-client";
 
 const TOKEN = "token";
 const LOGGED_IN = "loggedIn";
@@ -40,7 +41,9 @@ export const logUserOut = async () => {
 	isLoggedInVar(false);
 };
 
-const httpLink = createHttpLink({
+const httpLink = createHttpLink({});
+
+const uploadHttpLink = createUploadLink({
 	uri: "https://d167-121-135-2-226.ngrok.io/graphql",
 });
 
@@ -62,7 +65,7 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
 	}
 });
 
-const link = authLink.concat(onErrorLink).concat(httpLink);
+const link = authLink.concat(onErrorLink).concat(uploadHttpLink);
 
 // const wsLink = new GraphQLWsLink(
 // 	createClient({

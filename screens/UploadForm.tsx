@@ -56,7 +56,22 @@ type UploadFormScreenProps = NativeStackScreenProps<
 	"UploadForm"
 >;
 const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
-	const [uploadPhotoMutation, { loading }] = useUploadPhotoMutation();
+	const [uploadPhotoMutation, { loading }] = useUploadPhotoMutation({
+		update: (cache, result) => {
+			if (!result.data?.uploadPhoto) return;
+			const {
+				data: { uploadPhoto },
+			} = result;
+			if (uploadPhoto.id) {
+				cache.modify({
+					id: "ROOT_QUERY",
+					fields: {
+						seeFeed: (prev) => [uploadPhoto, ...prev],
+					},
+				});
+			}
+		},
+	});
 	const { register, handleSubmit, setValue } = useForm<UploadFormValue>();
 	useEffect(() => {
 		register("caption", {
@@ -84,12 +99,15 @@ const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 			name: "1.jpg",
 			type: "image/jpeg",
 		});
-		uploadPhotoMutation({
-			variables: {
-				file,
-				caption,
-			},
-		});
+		if (!loading) {
+			uploadPhotoMutation({
+				variables: {
+					file,
+					caption,
+				},
+			});
+			navigation.navigate("Tabs");
+		}
 	};
 	return (
 		<DismissKeyBoard>

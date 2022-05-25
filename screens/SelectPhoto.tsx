@@ -48,6 +48,8 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 	const [ok, setOk] = useState(false);
 	const [photos, setPhotos] = useState<IPhoto[]>([]);
 	const [chosenPhoto, setChosenPhoto] = useState("");
+	const [photoLocal, setPhotoLocal] = useState("");
+
 	const getPhotos = async () => {
 		if (ok) {
 			const { assets } = await MediaLibrary.getAssetsAsync();
@@ -68,8 +70,10 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 			setOk(false);
 		}
 	};
-	const choosePhoto = (uri: string) => {
-		setChosenPhoto(uri);
+	const choosePhoto = async (id: string) => {
+		const assetInfo = await MediaLibrary.getAssetInfoAsync(id);
+		setPhotoLocal(assetInfo.localUri!);
+		setChosenPhoto(assetInfo.uri);
 	};
 	const NUM_COLUMNS = 4;
 	const { width: screenWidth } = useWindowDimensions();
@@ -80,7 +84,7 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 
 	const headerRight = () => (
 		<TouchableOpacity
-			onPress={() => navigation.navigate("UploadForm", { file: chosenPhoto })}
+			onPress={() => navigation.navigate("UploadForm", { file: photoLocal! })}
 		>
 			<HeaderRightText>Next</HeaderRightText>
 		</TouchableOpacity>
@@ -90,7 +94,7 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 		navigation.setOptions({
 			headerRight,
 		});
-	}, [chosenPhoto]);
+	}, [chosenPhoto, photoLocal]);
 	return (
 		<Container>
 			<StatusBar />
@@ -108,7 +112,7 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 					numColumns={NUM_COLUMNS}
 					keyExtractor={(_, i) => i + ""}
 					renderItem={({ item: photo }) => (
-						<ImageContainer onPress={() => choosePhoto(photo.uri)}>
+						<ImageContainer onPress={() => choosePhoto(photo.id)}>
 							<Image
 								style={{ width: screenWidth / NUM_COLUMNS, height: 100 }}
 								resizeMode="cover"

@@ -8,11 +8,11 @@ import {
 	useWindowDimensions,
 } from "react-native";
 import styled from "styled-components/native";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 import { Ionicons } from "@expo/vector-icons";
 import { useToggleLikeMutation } from "../generated/graphql";
 import { UserAvatar, UserInfoBox, FatText } from "./sharedStyles";
 import { goToProfile } from "./sharedFunction";
+import ScreenParamList from "../navigators/screenParamList";
 
 const Container = styled.View``;
 
@@ -80,13 +80,13 @@ const PhotoBox = ({
 	comments,
 	fullView,
 }: IPhotoBoxProps) => {
-	const navigation: NativeStackNavigationProp<StackNavFactoryParamList> =
+	const navigation: NativeStackNavigationProp<ScreenParamList> =
 		useNavigation();
 	const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 	const [imageHeight, setImageHeight] = useState(screenHeight - 450);
 	useEffect(() => {
 		Image.getSize(file, (imageWidth, imageHeight) => {
-			setImageHeight(screenHeight / 3);
+			setImageHeight(imageHeight / 4);
 		});
 	}, [file]);
 	const [toggleLikeMutation] = useToggleLikeMutation({

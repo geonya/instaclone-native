@@ -30,7 +30,7 @@ const Feed = ({ navigation }: FeedScreenProps) => {
 						},
 					})
 				}
-				onEndReachedThreshold={0.1}
+				onEndReachedThreshold={0.5}
 				refreshing={refreshing}
 				onRefresh={refresh}
 				style={{ width: "100%" }}
