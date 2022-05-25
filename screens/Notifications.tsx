@@ -3,8 +3,6 @@ import { useFollowUpdatesSubscription } from "../generated/graphql";
 
 const Notifications = () => {
 	const { data, loading } = useFollowUpdatesSubscription();
-	console.log(loading);
-	console.log(data);
 	return (
 		<View
 			style={{
