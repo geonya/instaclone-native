@@ -1,10 +1,11 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList } from "react-native";
 import styled from "styled-components/native";
 import ScreenLayout from "../components/ScreenLayout";
 import UserRow from "../components/UserRow";
 import { useSeePhotoLikesQuery } from "../generated/graphql";
+import ScreenParamList from "../navigators/screenParamList";
 
 type LikesScreenProps = NativeStackScreenProps<ScreenParamList, "Likes">;
 

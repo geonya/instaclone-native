@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ScreenParamList from "../navigators/screenParamList";
+import HeaderRightNextBtn from "../components/HeaderRightNextBtn";
 
 const Container = styled.View`
 	flex: 1;
@@ -31,13 +32,6 @@ const IconContainer = styled.View`
 	position: absolute;
 	bottom: 5px;
 	right: 0;
-`;
-
-const HeaderRightText = styled.Text`
-	color: ${colors.blue};
-	font-size: 16px;
-	font-weight: 600;
-	margin-right: 5px;
 `;
 
 interface IPhoto {
@@ -78,20 +72,10 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 		getPermissions();
 		getPhotos();
 	}, [ok]);
-	const headerRight = () => (
-		<TouchableOpacity
-			onPress={() =>
-				navigation.navigate("UploadForm", {
-					file: chosenPhoto,
-				})
-			}
-		>
-			<HeaderRightText>Next</HeaderRightText>
-		</TouchableOpacity>
-	);
+
 	useEffect(() => {
 		navigation.setOptions({
-			headerRight,
+			headerRight: () => HeaderRightNextBtn({ navigation, file: chosenPhoto }),
 		});
 	}, [chosenPhoto]);
 	return (
