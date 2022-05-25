@@ -13,6 +13,7 @@ import {
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 
 const TOKEN = "token";
 const LOGGED_IN = "loggedIn";
@@ -52,29 +53,38 @@ const authLink = setContext((_, { headers }) => {
 	};
 });
 
-const authHttpLink = authLink.concat(httpLink);
+const onErrorLink = onError(({ graphQLErrors, networkError }) => {
+	if (graphQLErrors) {
+		console.log(graphQLErrors);
+	}
+	if (networkError) {
+		console.log(networkError);
+	}
+});
 
-const wsLink = new GraphQLWsLink(
-	createClient({
-		url: "ws://localhost:4000/graphql",
-		connectionParams: {
-			token: tokenVar(),
-		},
-	})
-);
+const link = authLink.concat(onErrorLink).concat(httpLink);
+
+// const wsLink = new GraphQLWsLink(
+// 	createClient({
+// 		url: "ws://localhost:4000/graphql",
+// 		connectionParams: {
+// 			token: tokenVar(),
+// 		},
+// 	})
+// );
 
 // http - ws url 전환용
-const splitLink = split(
-	({ query }) => {
-		const definition = getMainDefinition(query);
-		return (
-			definition.kind === "OperationDefinition" &&
-			definition.operation === "subscription"
-		);
-	},
-	wsLink,
-	authHttpLink
-);
+// const splitLink = split(
+// 	({ query }) => {
+// 		const definition = getMainDefinition(query);
+// 		return (
+// 			definition.kind === "OperationDefinition" &&
+// 			definition.operation === "subscription"
+// 		);
+// 	},
+// 	wsLink,
+// 	authHttpLink
+// );
 
 export const cache = new InMemoryCache({
 	typePolicies: {
@@ -90,7 +100,7 @@ export const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-	link: authHttpLink,
+	link,
 	cache,
 });
 

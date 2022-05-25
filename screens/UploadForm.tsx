@@ -5,12 +5,14 @@ import {
 	ActivityIndicator,
 	KeyboardAvoidingView,
 	Platform,
+	TouchableOpacity,
 } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../colors";
 import DismissKeyBoard from "../components/DismissKeyBoard";
-import HeaderRightNextBtn from "../components/HeaderRightNextBtn";
+import { useUploadPhotoMutation } from "../generated/graphql";
 import ScreenParamList from "../navigators/screenParamList";
+import { ReactNativeFile } from "apollo-upload-client";
 
 const Container = styled.View`
 	flex: 1;
@@ -38,6 +40,13 @@ const Wrapper = styled.View`
 	margin: 0 auto;
 `;
 
+const HeaderRightText = styled.Text`
+	color: ${colors.blue};
+	font-size: 16px;
+	font-weight: 600;
+	margin-right: 5px;
+`;
+
 interface UploadFormValue {
 	caption: string;
 }
@@ -47,33 +56,41 @@ type UploadFormScreenProps = NativeStackScreenProps<
 	"UploadForm"
 >;
 const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
-	const loading = false;
+	const [uploadPhotoMutation, { loading }] = useUploadPhotoMutation();
 	const { register, handleSubmit, setValue } = useForm<UploadFormValue>();
 	useEffect(() => {
 		register("caption", {
 			required: true,
 		});
 	}, [register]);
-	const changeHeaderRight = (loading: boolean) => {
-		if (loading) {
-			return (
-				<ActivityIndicator
-					size="small"
-					color="white"
-					style={{ marginRight: 15 }}
-				/>
-			);
-		} else {
-			return HeaderRightNextBtn({ navigation, file: route.params.file });
-		}
-	};
+	const headerRight = () => (
+		<TouchableOpacity onPress={handleSubmit(onValid)}>
+			<HeaderRightText>Next</HeaderRightText>
+		</TouchableOpacity>
+	);
+
+	const headerRightLoading = () => (
+		<ActivityIndicator size="small" color="white" style={{ marginRight: 15 }} />
+	);
 	useEffect(() => {
 		navigation.setOptions({
-			headerRight: () => changeHeaderRight(loading),
-			headerLeft: () => null,
+			headerRight: loading ? headerRightLoading : headerRight,
+			...(loading && { headerLeft: () => null }),
 		});
 	}, []);
-	const onValid: SubmitHandler<UploadFormValue> = ({ caption }) => {};
+	const onValid: SubmitHandler<UploadFormValue> = ({ caption }) => {
+		const file = new ReactNativeFile({
+			uri: route.params.file,
+			name: "1.jpg",
+			type: "image/jpeg",
+		});
+		uploadPhotoMutation({
+			variables: {
+				file,
+				caption,
+			},
+		});
+	};
 	return (
 		<DismissKeyBoard>
 			<Container>
