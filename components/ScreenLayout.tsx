@@ -1,22 +1,24 @@
 import { ActivityIndicator, Text, View } from "react-native";
-import AuthButton from "./auth/AuthButton";
+import styled from "styled-components/native";
+import { colors } from "../colors";
 
 interface IScreenLayoutProps {
 	loading: boolean;
 	children: React.ReactNode;
 }
 
+const Container = styled.View`
+	flex: 1;
+	background-color: ${colors.black};
+	justify-content: center;
+	align-items: center;
+`;
+
 const ScreenLayout = ({ loading, children }: IScreenLayoutProps) => {
 	return (
-		<View
-			style={{
-				backgroundColor: "black",
-				flex: 1,
-				alignItems: "center",
-			}}
-		>
-			{loading ? <ActivityIndicator color="white" /> : children}
-		</View>
+		<Container>
+			{loading ? <ActivityIndicator color="white" size="large" /> : children}
+		</Container>
 	);
 };
 
