@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
 	FlatList,
 	Image,
+	StatusBar,
 	TouchableOpacity,
 	useWindowDimensions,
 } from "react-native";
@@ -10,7 +11,7 @@ import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { uploadNavParamList } from "../navigators/UploadNav";
+import { UploadNavParamList } from "../navigators/UploadNav";
 
 const Container = styled.View`
 	flex: 1;
@@ -43,8 +44,8 @@ interface IPhoto {
 	id: string;
 	uri: string;
 }
-type selectPhotoScreenProps = NativeStackScreenProps<uploadNavParamList>;
-const SelectPhoto = ({ navigation }: selectPhotoScreenProps) => {
+type SelectPhotoScreenProps = NativeStackScreenProps<UploadNavParamList>;
+const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 	const [ok, setOk] = useState(false);
 	const [photos, setPhotos] = useState<IPhoto[]>([]);
 	const [chosenPhoto, setChosenPhoto] = useState("");
@@ -78,7 +79,13 @@ const SelectPhoto = ({ navigation }: selectPhotoScreenProps) => {
 		getPhotos();
 	}, [ok]);
 	const headerRight = () => (
-		<TouchableOpacity>
+		<TouchableOpacity
+			onPress={() =>
+				navigation.navigate("UploadForm", {
+					file: chosenPhoto,
+				})
+			}
+		>
 			<HeaderRightText>Next</HeaderRightText>
 		</TouchableOpacity>
 	);
@@ -89,6 +96,7 @@ const SelectPhoto = ({ navigation }: selectPhotoScreenProps) => {
 	}, []);
 	return (
 		<Container>
+			<StatusBar />
 			<Top>
 				{chosenPhoto !== "" && (
 					<Image

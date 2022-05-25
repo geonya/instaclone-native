@@ -1,13 +1,19 @@
 import { Camera, CameraType, FlashMode } from "expo-camera";
-import { LegacyRef, useEffect, useRef, useState } from "react";
-import { Alert, Image, StatusBar, Text, TouchableOpacity } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+	ActivityIndicator,
+	Alert,
+	Image,
+	StatusBar,
+	TouchableOpacity,
+} from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import * as MediaLibrary from "expo-media-library";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { uploadNavParamList } from "../navigators/UploadNav";
-import { FatText } from "../components/sharedStyles";
+import { UploadNavParamList } from "../navigators/UploadNav";
+import { useIsFocused } from "@react-navigation/native";
 
 const Container = styled.View`
 	flex: 1;
@@ -59,7 +65,15 @@ const PhotoAction = styled.TouchableOpacity`
 const PhotoActionText = styled.Text`
 	font-weight: 600;
 `;
-type takePhotoScreenProps = NativeStackScreenProps<uploadNavParamList>;
+
+const WaitingCameraContainer = styled.View`
+	opacity: 0.5;
+	flex: 1;
+	background-color: black;
+	justify-content: center;
+	align-items: center;
+`;
+type takePhotoScreenProps = NativeStackScreenProps<UploadNavParamList>;
 const TakePhoto = ({ navigation }: takePhotoScreenProps) => {
 	const cameraRef = useRef<Camera | null>();
 	const [takenPhoto, setTakenPhoto] = useState("");
@@ -98,7 +112,7 @@ const TakePhoto = ({ navigation }: takePhotoScreenProps) => {
 		if (save) {
 			await MediaLibrary.saveToLibraryAsync(takenPhoto);
 		} else {
-			console.log("will upload", takenPhoto);
+			navigation.navigate("UploadForm", { file: takenPhoto });
 		}
 	};
 	const onUpload = () => {
@@ -126,10 +140,22 @@ const TakePhoto = ({ navigation }: takePhotoScreenProps) => {
 		}
 	};
 	const onDismiss = () => setTakenPhoto("");
+	const isFocused = useIsFocused();
+	const afterCamera = (takenPhoto: string) => {
+		if (takenPhoto === "") {
+			return (
+				<WaitingCameraContainer>
+					<ActivityIndicator color="white" size="large" />
+				</WaitingCameraContainer>
+			);
+		} else {
+			return <Image source={{ uri: takenPhoto }} style={{ flex: 1 }} />;
+		}
+	};
 	return (
 		<Container>
-			<StatusBar hidden={true} />
-			{takenPhoto === "" ? (
+			{isFocused ? <StatusBar hidden={true} /> : null}
+			{takenPhoto === "" && isFocused ? (
 				<Camera
 					type={cameraType}
 					style={{ flex: 1 }}
@@ -145,7 +171,7 @@ const TakePhoto = ({ navigation }: takePhotoScreenProps) => {
 					</CloseBtn>
 				</Camera>
 			) : (
-				<Image source={{ uri: takenPhoto }} style={{ flex: 1 }} />
+				afterCamera(takenPhoto)
 			)}
 			{takenPhoto === "" ? (
 				<Actions>
@@ -160,7 +186,6 @@ const TakePhoto = ({ navigation }: takePhotoScreenProps) => {
 						/>
 					</SliderContainer>
 					<ButtonContainer>
-						<TakePhotoBtn onPress={takePhotoFn} />
 						<ActionsContainer>
 							<TouchableOpacity
 								onPress={onFlashChange}
@@ -182,6 +207,7 @@ const TakePhoto = ({ navigation }: takePhotoScreenProps) => {
 								<Ionicons size={40} color="white" name={"camera-reverse"} />
 							</TouchableOpacity>
 						</ActionsContainer>
+						<TakePhotoBtn onPress={takePhotoFn} />
 					</ButtonContainer>
 				</Actions>
 			) : (

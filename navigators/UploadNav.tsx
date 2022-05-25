@@ -10,13 +10,14 @@ import { LoggedInNavParamList } from "./LoggedInNav";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
-type upLoadNavScreenProps = NativeStackScreenProps<LoggedInNavParamList>;
-export type uploadNavParamList = {
+type UpLoadNavScreenProps = NativeStackScreenProps<LoggedInNavParamList>;
+export type UploadNavParamList = {
 	SelectPhoto: undefined;
 	TakePhoto: undefined;
 	Tabs: undefined;
+	UploadForm: { file: string };
 };
-const UploadNav = ({ navigation }: upLoadNavScreenProps) => {
+const UploadNav = ({ navigation }: UpLoadNavScreenProps) => {
 	return (
 		<Tab.Navigator
 			tabBarPosition="bottom"
