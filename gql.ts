@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 const USER_FRAGMENT = gql`
-	fragment User_Fragment on User {
+	fragment UserFragment on User {
 		id
 		username
 		avatar
@@ -22,8 +22,23 @@ const PHOTO_FRAGMENT = gql`
 	}
 `;
 
+const FEED_PHOTO = gql`
+	fragment FeedPhoto on Photo {
+		...PhotoFragment
+		user {
+			id
+			username
+			avatar
+		}
+		caption
+		createdAt
+		isMine
+	}
+	${PHOTO_FRAGMENT}
+`;
+
 const COMMENT_FRAGMENT = gql`
-	fragment Comment_Fragment on Comment {
+	fragment CommentFragment on Comment {
 		id
 		user {
 			username
@@ -43,7 +58,7 @@ gql`
 			totalPhotos
 			totalFollowing
 			totalFollowers
-			...User_Fragment
+			...UserFragment
 		}
 		${USER_FRAGMENT}
 	}
@@ -58,10 +73,10 @@ gql`
 	query SeeFeed($offset: Int!) {
 		seeFeed(offset:$offset) {
 			user {
-				...User_Fragment
+				...UserFragment
 			}
 			comments {
-				...Comment_Fragment
+				...CommentFragment
 			}
 			...PhotoFragment
 			isMine
@@ -76,7 +91,7 @@ gql`
     firstName
     lastName
     bio
-    ...User_Fragment
+    ...UserFragment
     totalFollowing
     totalFollowers
     isFollowing
@@ -90,7 +105,7 @@ gql`
 }
 query SeePhotoLikes($id: Int!) {
   seePhotoLikes(id: $id) {
-		...User_Fragment
+		...UserFragment
   }
 	${USER_FRAGMENT}
 }
@@ -103,10 +118,10 @@ query SearchPhotos($keyword: String!) {
 query SeePhoto($id: Int!) {
   seePhoto(id: $id) {
     user {
-				...User_Fragment
+				...UserFragment
 			}
 			comments {
-				...Comment_Fragment
+				...CommentFragment
 			}
 			...PhotoFragment
 			isMine
@@ -176,6 +191,12 @@ gql`
 			error
 		}
 	}
+	mutation UploadPhoto($file: Upload!, $caption: String) {
+  uploadPhoto(file: $file, caption: $caption) {
+    ...FeedPhoto
+  }
+	${FEED_PHOTO}
+}
 `;
 
 gql`
