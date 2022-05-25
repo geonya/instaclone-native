@@ -13,6 +13,8 @@ const Stack = createNativeStackNavigator();
 type upLoadNavScreenProps = NativeStackScreenProps<LoggedInNavParamList>;
 export type uploadNavParamList = {
 	SelectPhoto: undefined;
+	TakePhoto: undefined;
+	Tabs: undefined;
 };
 const UploadNav = ({ navigation }: upLoadNavScreenProps) => {
 	return (

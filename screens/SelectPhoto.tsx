@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { uploadNavParamList } from "../navigators/UploadNav";
-import { FatText } from "../components/sharedStyles";
 
 const Container = styled.View`
 	flex: 1;
