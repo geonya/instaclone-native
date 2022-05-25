@@ -11,7 +11,7 @@ import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { UploadNavParamList } from "../navigators/UploadNav";
+import ScreenParamList from "../navigators/screenParamList";
 
 const Container = styled.View`
 	flex: 1;
@@ -44,7 +44,7 @@ interface IPhoto {
 	id: string;
 	uri: string;
 }
-type SelectPhotoScreenProps = NativeStackScreenProps<UploadNavParamList>;
+type SelectPhotoScreenProps = NativeStackScreenProps<ScreenParamList>;
 const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 	const [ok, setOk] = useState(false);
 	const [photos, setPhotos] = useState<IPhoto[]>([]);
@@ -93,7 +93,7 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 		navigation.setOptions({
 			headerRight,
 		});
-	}, []);
+	}, [chosenPhoto]);
 	return (
 		<Container>
 			<StatusBar />

@@ -5,12 +5,8 @@ import styled from "styled-components/native";
 import ScreenLayout from "../components/ScreenLayout";
 import UserRow from "../components/UserRow";
 import { useSeePhotoLikesQuery } from "../generated/graphql";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
 
-type LikesScreenProps = NativeStackScreenProps<
-	StackNavFactoryParamList,
-	"Likes"
->;
+type LikesScreenProps = NativeStackScreenProps<ScreenParamList, "Likes">;
 
 const Seperator = styled.View`
 	width: 100%;

@@ -12,8 +12,7 @@ import useMyPhotos from "../components/hooks/useMyPhotos";
 import ScreenLayout from "../components/ScreenLayout";
 import { goToPhoto } from "../components/sharedFunction";
 import { FatText, UserAvatar } from "../components/sharedStyles";
-import { useSeeMyPhotosQuery } from "../generated/graphql";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+import ScreenParamList from "../navigators/screenParamList";
 
 const Header = styled.View`
 	width: 100%;
@@ -74,7 +73,7 @@ const ProfileEditBtn = styled.TouchableOpacity`
 	align-items: center;
 `;
 
-type MeProps = NativeStackScreenProps<StackNavFactoryParamList>;
+type MeProps = NativeStackScreenProps<ScreenParamList>;
 const Me = ({ navigation }: MeProps) => {
 	const NUM_COLUMS = 3;
 	const { width: screenWidth, height: sreenHeight } = useWindowDimensions();

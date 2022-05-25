@@ -9,23 +9,9 @@ import Photo from "../screens/Photo";
 import Profile from "../screens/Profile";
 import Search from "../screens/Search";
 
-export type StackNavFactoryParamList = {
-	Feed: undefined;
-	Search: undefined;
-	Notifications: undefined;
-	Me: undefined;
-	Profile: { username: string; userId: number };
-	Photo: { photoId: number };
-	Likes: {
-		photoId: number;
-	};
-	Comments: undefined;
-};
-
 interface IStackNavFactoryProps {
 	screenName: string;
 }
-
 const Stack = createNativeStackNavigator();
 
 const StackNavFactory = ({ screenName }: IStackNavFactoryProps) => {

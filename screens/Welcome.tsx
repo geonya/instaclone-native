@@ -1,11 +1,11 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { StackParamList } from "../navigators/LoggedOutNav";
 import styled from "styled-components/native";
 import { colors } from "../colors";
 import { TouchableOpacity } from "react-native";
 import AuthLayOut from "../components/auth/AuthLayout";
 import AuthButton from "../components/auth/AuthButton";
+import ScreenParamList from "../navigators/screenParamList";
 
 const LoginLink = styled.Text`
 	text-align: center;
@@ -14,7 +14,7 @@ const LoginLink = styled.Text`
 	font-weight: 600;
 `;
 
-type WelcomeScreenProps = NativeStackScreenProps<StackParamList, "Welcome">;
+type WelcomeScreenProps = NativeStackScreenProps<ScreenParamList, "Welcome">;
 
 const Welcome = ({ navigation }: WelcomeScreenProps) => {
 	const goToCreateAccount = () => navigation.navigate("CreateAccount");

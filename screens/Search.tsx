@@ -13,9 +13,9 @@ import styled from "styled-components/native";
 import DismissKeyBoard from "../components/DismissKeyBoard";
 import { goToPhoto } from "../components/sharedFunction";
 import { useSearchPhotosLazyQuery } from "../generated/graphql";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+import ScreenParamList from "../navigators/screenParamList";
 
-type SearchScreenProps = NativeStackScreenProps<StackNavFactoryParamList>;
+type SearchScreenProps = NativeStackScreenProps<ScreenParamList>;
 interface SearchFormValue {
 	keyword: string;
 }

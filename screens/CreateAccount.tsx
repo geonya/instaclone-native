@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { TextInput } from "react-native";
-import { StackParamList } from "../navigators/LoggedOutNav";
 import AuthLayOut from "../components/auth/AuthLayout";
 import AuthButton from "../components/auth/AuthButton";
 import { useEffect, useRef } from "react";
@@ -13,9 +12,10 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import { useCreateAccountMutation } from "../generated/graphql";
+import ScreenParamList from "../navigators/screenParamList";
 
 type CreateAccountScreenProps = NativeStackScreenProps<
-	StackParamList,
+	ScreenParamList,
 	"CreateAccount"
 >;
 interface ICreateAccountValues {

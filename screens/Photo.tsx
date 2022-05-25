@@ -10,12 +10,9 @@ import {
 import PhotoBox from "../components/PhotoBox";
 import ScreenLayout from "../components/ScreenLayout";
 import { useSeePhotoQuery } from "../generated/graphql";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+import ScreenParamList from "../navigators/screenParamList";
 
-type SearchScreenProps = NativeStackScreenProps<
-	StackNavFactoryParamList,
-	"Photo"
->;
+type SearchScreenProps = NativeStackScreenProps<ScreenParamList, "Photo">;
 
 const Photo = ({ navigation, route }: SearchScreenProps) => {
 	const { data, loading, refetch } = useSeePhotoQuery({

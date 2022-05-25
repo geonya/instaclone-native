@@ -6,17 +6,12 @@ import {
 import SelectPhoto from "../screens/SelectPhoto";
 import TakePhoto from "../screens/TakePhoto";
 import { Ionicons } from "@expo/vector-icons";
-import { LoggedInNavParamList } from "./LoggedInNav";
+import ScreenParamList from "./screenParamList";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
-type UpLoadNavScreenProps = NativeStackScreenProps<LoggedInNavParamList>;
-export type UploadNavParamList = {
-	SelectPhoto: undefined;
-	TakePhoto: undefined;
-	Tabs: undefined;
-	UploadForm: { file: string };
-};
+type UpLoadNavScreenProps = NativeStackScreenProps<ScreenParamList>;
+
 const UploadNav = ({ navigation }: UpLoadNavScreenProps) => {
 	return (
 		<Tab.Navigator

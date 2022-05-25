@@ -13,9 +13,9 @@ import {
 } from "../components/auth/AuthShared";
 import FormError from "../components/auth/FormError";
 import { useLoginMutation } from "../generated/graphql";
-import { StackParamList } from "../navigators/LoggedOutNav";
+import ScreenParamList from "../navigators/screenParamList";
 
-type LoginScreenProps = NativeStackScreenProps<StackParamList, "Login">;
+type LoginScreenProps = NativeStackScreenProps<ScreenParamList, "Login">;
 interface ILoginValues {
 	username: string;
 	password: string;

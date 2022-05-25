@@ -1,20 +1,14 @@
-import {
-	createNativeStackNavigator,
-	NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UploadForm from "../screens/UploadForm";
 import TabsNav from "./TabsNav";
 import UploadNav from "./UploadNav";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
-export type LoggedInNavParamList = {
-	Tabs: undefined;
-	Upload: undefined;
-};
-type LoggedInScreenProps = NativeStackScreenProps<LoggedInNavParamList>;
 
-const LoggedInNav = ({ navigation }: LoggedInScreenProps) => {
+const LoggedInNav = () => {
+	const navigation = useNavigation();
 	return (
 		<Stack.Navigator
 			screenOptions={{
@@ -45,7 +39,7 @@ const LoggedInNav = ({ navigation }: LoggedInScreenProps) => {
 							color={tintColor}
 							name="close"
 							size={28}
-							onPress={() => navigation.navigate("Tabs")}
+							onPress={() => navigation.goBack()}
 						/>
 					),
 				}}

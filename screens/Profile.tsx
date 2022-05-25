@@ -1,9 +1,17 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+import styled from "styled-components/native";
+import ScreenParamList from "../navigators/screenParamList";
 
-type ProfileProps = NativeStackScreenProps<StackNavFactoryParamList, "Profile">;
+type ProfileProps = NativeStackScreenProps<ScreenParamList, "Profile">;
+
+const Container = styled.View`
+	flex: 1;
+	background-color: black;
+	justify-content: center;
+	align-items: center;
+`;
 
 const Profile = ({ navigation, route }: ProfileProps) => {
 	useEffect(() => {
@@ -11,17 +19,11 @@ const Profile = ({ navigation, route }: ProfileProps) => {
 			title: route.params.username,
 		});
 	}, [navigation, route.params]);
+
 	return (
-		<View
-			style={{
-				backgroundColor: "black",
-				flex: 1,
-				alignItems: "center",
-				justifyContent: "center",
-			}}
-		>
+		<Container>
 			<Text style={{ color: "white" }}>{route.params.username}'s Profile</Text>
-		</View>
+		</Container>
 	);
 };
 

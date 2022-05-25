@@ -12,8 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import * as MediaLibrary from "expo-media-library";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { UploadNavParamList } from "../navigators/UploadNav";
 import { useIsFocused } from "@react-navigation/native";
+import ScreenParamList from "../navigators/screenParamList";
 
 const Container = styled.View`
 	flex: 1;
@@ -73,7 +73,7 @@ const WaitingCameraContainer = styled.View`
 	justify-content: center;
 	align-items: center;
 `;
-type takePhotoScreenProps = NativeStackScreenProps<UploadNavParamList>;
+type takePhotoScreenProps = NativeStackScreenProps<ScreenParamList>;
 const TakePhoto = ({ navigation }: takePhotoScreenProps) => {
 	const cameraRef = useRef<Camera | null>();
 	const [takenPhoto, setTakenPhoto] = useState("");

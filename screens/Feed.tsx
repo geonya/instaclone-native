@@ -4,9 +4,9 @@ import { FlatList } from "react-native";
 import PhotoBox from "../components/PhotoBox";
 import ScreenLayout from "../components/ScreenLayout";
 import { useSeeFeedQuery } from "../generated/graphql";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+import ScreenParamList from "../navigators/screenParamList";
 
-type FeedScreenProps = NativeStackScreenProps<StackNavFactoryParamList, "Feed">;
+type FeedScreenProps = NativeStackScreenProps<ScreenParamList, "Feed">;
 
 const Feed = ({ navigation }: FeedScreenProps) => {
 	const { data, loading, refetch, fetchMore } = useSeeFeedQuery({
