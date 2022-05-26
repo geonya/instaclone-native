@@ -6,7 +6,7 @@ import {
 	useFollowUserMutation,
 	useUnfollowUserMutation,
 } from "../generated/graphql";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+import ScreenParamList from "../navigators/screenParamList";
 import useMe from "./hooks/useMe";
 import { goToProfile } from "./sharedFunction";
 import { UserAvatar, UserInfoBox, FatText } from "./sharedStyles";
@@ -38,7 +38,7 @@ interface IUserRowProsp {
 	avatar?: string | null;
 	isFollowing: boolean;
 	isMe: boolean;
-	navigation: NativeStackNavigationProp<StackNavFactoryParamList>;
+	navigation: NativeStackNavigationProp<ScreenParamList>;
 }
 
 const UserRow = ({

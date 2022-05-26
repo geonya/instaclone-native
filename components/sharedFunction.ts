@@ -1,8 +1,8 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackNavFactoryParamList } from "../navigators/StackNavFactory";
+import ScreenParamList from "../navigators/screenParamList";
 
 interface IGoToProfileProps {
-	navigation: NativeStackNavigationProp<StackNavFactoryParamList>;
+	navigation: NativeStackNavigationProp<ScreenParamList>;
 	username: string;
 	userId: number;
 }
@@ -17,7 +17,7 @@ export const goToProfile = ({
 	});
 
 interface IGotoPhotoProps {
-	navigation: NativeStackNavigationProp<StackNavFactoryParamList>;
+	navigation: NativeStackNavigationProp<ScreenParamList>;
 	photoId: number;
 }
 export const goToPhoto = ({ navigation, photoId }: IGotoPhotoProps) =>

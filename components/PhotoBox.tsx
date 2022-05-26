@@ -82,13 +82,6 @@ const PhotoBox = ({
 }: IPhotoBoxProps) => {
 	const navigation: NativeStackNavigationProp<ScreenParamList> =
 		useNavigation();
-	const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-	const [imageHeight, setImageHeight] = useState(screenHeight - 450);
-	useEffect(() => {
-		Image.getSize(file, (imageWidth, imageHeight) => {
-			setImageHeight(imageHeight / 4);
-		});
-	}, [file]);
 	const [toggleLikeMutation] = useToggleLikeMutation({
 		variables: {
 			id,
@@ -123,8 +116,8 @@ const PhotoBox = ({
 				<FatText>{user.username}</FatText>
 			</UserInfoBox>
 			<File
-				resizeMode="cover"
-				style={{ width: screenWidth, height: imageHeight }}
+				resizeMode="contain"
+				style={{ width: 375, height: 300 }}
 				source={{ uri: file }}
 			/>
 			<ExtraContainer>

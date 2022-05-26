@@ -9,12 +9,12 @@ import Photo from "../screens/Photo";
 import Profile from "../screens/Profile";
 import Search from "../screens/Search";
 
-interface IStackNavFactoryProps {
+interface ISharedStackNavProps {
 	screenName: string;
 }
 const Stack = createNativeStackNavigator();
 
-const StackNavFactory = ({ screenName }: IStackNavFactoryProps) => {
+const SharedStackNav = ({ screenName }: ISharedStackNavProps) => {
 	return (
 		<Stack.Navigator
 			screenOptions={{
@@ -58,4 +58,4 @@ const StackNavFactory = ({ screenName }: IStackNavFactoryProps) => {
 	);
 };
 
-export default StackNavFactory;
+export default SharedStackNav;

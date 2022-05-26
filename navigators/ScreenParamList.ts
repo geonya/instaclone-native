@@ -17,6 +17,7 @@ type ScreenParamList = {
 	Tabs: undefined;
 	Upload: undefined;
 	UploadForm: { file: string };
+	Messages: undefined;
 };
 
 export default ScreenParamList;

@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 import useMe from "../components/hooks/useMe";
 import TabIcon from "../components/nav/TabIcon";
 import { UserAvatar } from "../components/sharedStyles";
-import StackNavFactory from "./StackNavFactory";
+import SharedStackNav from "./SharedStackNav";
 
 const Tabs = createBottomTabNavigator();
 
@@ -29,7 +29,7 @@ const TabsNav = () => {
 					),
 				}}
 			>
-				{() => <StackNavFactory screenName="Feed" />}
+				{() => <SharedStackNav screenName="Feed" />}
 			</Tabs.Screen>
 			<Tabs.Screen
 				name="TabSearch"
@@ -44,7 +44,7 @@ const TabsNav = () => {
 					),
 				}}
 			>
-				{() => <StackNavFactory screenName="Search" />}
+				{() => <SharedStackNav screenName="Search" />}
 			</Tabs.Screen>
 			<Tabs.Screen
 				name="Camera"
@@ -76,7 +76,7 @@ const TabsNav = () => {
 					),
 				}}
 			>
-				{() => <StackNavFactory screenName="Notifications" />}
+				{() => <SharedStackNav screenName="Notifications" />}
 			</Tabs.Screen>
 
 			<Tabs.Screen
@@ -102,7 +102,7 @@ const TabsNav = () => {
 						),
 				}}
 			>
-				{() => <StackNavFactory screenName="Me" />}
+				{() => <SharedStackNav screenName="Me" />}
 			</Tabs.Screen>
 		</Tabs.Navigator>
 	);
