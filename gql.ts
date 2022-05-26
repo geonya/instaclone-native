@@ -50,6 +50,17 @@ const COMMENT_FRAGMENT = gql`
 	}
 `;
 
+const ROOM_FRAGMENT = gql`
+	fragment RoomFragment on Room {
+		id
+		unreadTotal
+		users {
+			username
+			avatar
+		}
+	}
+`;
+
 gql`
 	query SeeMe {
 		seeMe {
@@ -129,6 +140,12 @@ query SeePhoto($id: Int!) {
 	${USER_FRAGMENT}
 	${PHOTO_FRAGMENT}
 	${COMMENT_FRAGMENT}
+}
+query SeeRooms {
+  seeRooms {
+    ...RoomFragment
+  }
+	${ROOM_FRAGMENT}
 }
 `;
 

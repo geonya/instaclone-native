@@ -382,6 +382,11 @@ export type SeePhotoQueryVariables = Exact<{
 
 export type SeePhotoQuery = { __typename?: 'Query', seePhoto?: { __typename?: 'Photo', isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, caption?: string | null, createdAt: string, user: { __typename?: 'User', id: number, username: string, avatar?: string | null, isFollowing: boolean, isMe: boolean }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null };
 
+export type SeeRoomsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SeeRoomsQuery = { __typename?: 'Query', seeRooms?: Array<{ __typename?: 'Room', id: number, unreadTotal: number, users?: Array<{ __typename?: 'User', username: string, avatar?: string | null } | null> | null } | null> | null };
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -776,6 +781,45 @@ export function useSeePhotoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<S
 export type SeePhotoQueryHookResult = ReturnType<typeof useSeePhotoQuery>;
 export type SeePhotoLazyQueryHookResult = ReturnType<typeof useSeePhotoLazyQuery>;
 export type SeePhotoQueryResult = Apollo.QueryResult<SeePhotoQuery, SeePhotoQueryVariables>;
+export const SeeRoomsDocument = gql`
+    query SeeRooms {
+  seeRooms {
+    id
+    unreadTotal
+    users {
+      username
+      avatar
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeeRoomsQuery__
+ *
+ * To run a query within a React component, call `useSeeRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeRoomsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSeeRoomsQuery(baseOptions?: Apollo.QueryHookOptions<SeeRoomsQuery, SeeRoomsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeRoomsQuery, SeeRoomsQueryVariables>(SeeRoomsDocument, options);
+      }
+export function useSeeRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeRoomsQuery, SeeRoomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeRoomsQuery, SeeRoomsQueryVariables>(SeeRoomsDocument, options);
+        }
+export type SeeRoomsQueryHookResult = ReturnType<typeof useSeeRoomsQuery>;
+export type SeeRoomsLazyQueryHookResult = ReturnType<typeof useSeeRoomsLazyQuery>;
+export type SeeRoomsQueryResult = Apollo.QueryResult<SeeRoomsQuery, SeeRoomsQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
