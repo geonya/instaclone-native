@@ -17,9 +17,11 @@ const Feed = ({ navigation }: FeedScreenProps) => {
 	});
 	const [refreshing, setRefreshing] = useState(false);
 	const refresh = async () => {
-		setRefreshing(true);
-		await refetch();
-		setRefreshing(false);
+		if (!refreshing) {
+			setRefreshing(true);
+			await refetch();
+			setRefreshing(false);
+		}
 	};
 	const MessagesButton = () => (
 		<TouchableOpacity

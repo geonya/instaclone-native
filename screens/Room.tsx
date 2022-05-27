@@ -26,15 +26,24 @@ const Message = styled.Text`
 	font-size: 16px;
 	margin: 0 10px;
 `;
+const InputContainer = styled.View`
+	width: 90%;
+`;
 const MessageTextInput = styled.TextInput`
 	color: white;
 	margin-top: 25px;
 	margin-bottom: 50px;
-	width: 90%;
+	width: 100%;
 	border: 2px solid rgba(255, 255, 255, 0.5);
 	padding: 10px 20px;
 	border-radius: 1000px;
 `;
+const SendBtn = styled.TouchableOpacity`
+	position: absolute;
+	right: 15px;
+	top: 35px;
+`;
+
 interface MessageInputValues {
 	payload: string;
 }
@@ -127,10 +136,13 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 	}, []);
 	const [refreshing, setRefreshing] = useState(false);
 	const onRefresh = async () => {
-		setRefreshing(true);
-		await refetch();
-		setRefreshing(false);
+		if (!refreshing) {
+			setRefreshing(true);
+			await refetch();
+			setRefreshing(false);
+		}
 	};
+
 	return (
 		<KeyboardAvoidingView
 			style={{
@@ -145,9 +157,11 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 					refreshing={refreshing}
 					onRefresh={onRefresh}
 					showsVerticalScrollIndicator={false}
-					style={{ width: "100%", paddingVertical: 20 }}
+					style={{ width: "100%", marginVertical: 20 }}
+					inverted
 					ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-					data={data?.seeRoom?.messages}
+					// immutable 한 data를 copy 하여 reverse 시킴 (reverse 메서드는 원본 배열을 변경하기 때문)
+					data={[...(data?.seeRoom?.messages || [])].reverse()}
 					keyExtractor={(_, i) => i + ""}
 					renderItem={({ item }) => (
 						<MessageContainer isMine={item?.isMine}>
@@ -162,17 +176,29 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 						</MessageContainer>
 					)}
 				/>
-				<MessageTextInput
-					autoCapitalize="none"
-					autoCorrect={false}
-					placeholder={"Writh your message"}
-					placeholderTextColor="rgba(255, 255, 255, 0.5)"
-					returnKeyLabel="Send Message"
-					returnKeyType="send"
-					onSubmitEditing={handleSubmit(onValid)}
-					onChangeText={(text) => setValue("payload", text)}
-					value={watch("payload")}
-				/>
+				<InputContainer>
+					<MessageTextInput
+						autoCapitalize="none"
+						autoCorrect={false}
+						placeholder={"Writh your message"}
+						placeholderTextColor="rgba(255, 255, 255, 0.5)"
+						returnKeyLabel="Send Message"
+						returnKeyType="send"
+						onSubmitEditing={handleSubmit(onValid)}
+						onChangeText={(text) => setValue("payload", text)}
+						value={watch("payload")}
+					/>
+					<SendBtn
+						onPress={handleSubmit(onValid)}
+						disabled={!Boolean(watch("payload"))}
+					>
+						<Ionicons
+							name="send"
+							size={20}
+							color={!Boolean(watch("payload")) ? "gray" : "white"}
+						/>
+					</SendBtn>
+				</InputContainer>
 			</ScreenLayout>
 		</KeyboardAvoidingView>
 	);
