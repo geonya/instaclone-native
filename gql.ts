@@ -231,7 +231,7 @@ gql`
 	mutation SendMessage($payload: String!, $roomId: Int, $userId: Int) {
 		sendMessage(payload: $payload, roomId: $roomId, userId: $userId) {
 			ok
-			error
+			id
 		}
 	}
 `;

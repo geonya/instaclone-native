@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
-import { FlatList, KeyboardAvoidingView } from "react-native";
+import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import ScreenParamList from "../navigators/screenParamList";
 import { useSeeRoomQuery, useSendMessageMutation } from "../generated/graphql";
@@ -8,6 +8,8 @@ import ScreenLayout from "../components/ScreenLayout";
 import styled from "styled-components/native";
 import { UserAvatar } from "../components/sharedStyles";
 import { SubmitHandler, useForm } from "react-hook-form";
+import useMe from "../components/hooks/useMe";
+import { gql } from "@apollo/client";
 
 const MessageContainer = styled.View<{ isMine?: boolean }>`
 	width: 100%;
@@ -38,26 +40,76 @@ interface MessageInputValues {
 }
 type RoomScreenProps = NativeStackScreenProps<ScreenParamList, "Room">;
 const Room = ({ route, navigation }: RoomScreenProps) => {
+	const { data: meData } = useMe();
 	const { data, loading, refetch } = useSeeRoomQuery({
 		variables: {
 			id: route.params.id,
 		},
 	});
-	const { register, handleSubmit, setValue } = useForm<MessageInputValues>();
+	const { register, handleSubmit, setValue, getValues } =
+		useForm<MessageInputValues>();
 	const [sendMessageMutation, { loading: sendLoading }] =
-		useSendMessageMutation();
-	const onValid: SubmitHandler<MessageInputValues> = ({ payload }) => {
-		sendMessageMutation({
-			variables: {
-				roomId: route.params.id,
-				payload,
+		useSendMessageMutation({
+			update: (cache, result) => {
+				if (!result.data?.sendMessage) return;
+				const {
+					data: {
+						sendMessage: { ok, id },
+					},
+				} = result;
+				if (ok && meData) {
+					// fake data
+					const messageObject = {
+						__typename: "Message",
+						id,
+						payload: getValues("payload"),
+						user: {
+							username: meData?.seeMe?.username,
+							avatar: meData?.seeMe?.avatar,
+						},
+						read: true,
+						isMine: true,
+					};
+					// fake query
+					const messageFragment = cache.writeFragment({
+						fragment: gql`
+							fragment NewMessage on Message {
+								id
+								payload
+								user {
+									username
+									avatar
+								}
+								read
+								isMine
+							}
+						`,
+						data: messageObject,
+					});
+					// cache update
+					cache.modify({
+						id: `Room:${route.params.id}`,
+						fields: {
+							messages: (prev) => [messageFragment, ...prev],
+						},
+					});
+				}
 			},
 		});
-		setValue("payload", "");
+	const onValid: SubmitHandler<MessageInputValues> = ({ payload }) => {
+		if (!sendLoading) {
+			sendMessageMutation({
+				variables: {
+					roomId: route.params.id,
+					payload,
+				},
+			});
+			setValue("payload", "");
+		}
 	};
 	useEffect(() => {
 		register("payload", { required: true });
-	}, []);
+	}, [register]);
 	useEffect(() => {
 		navigation.setOptions({
 			title: `${route.params.talkingTo?.username}`,
@@ -90,8 +142,8 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 				<FlatList
 					refreshing={refreshing}
 					onRefresh={onRefresh}
-					inverted={true}
-					style={{ width: "100%" }}
+					style={{ width: "100%", paddingTop: 20 }}
+					ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
 					data={data?.seeRoom?.messages}
 					keyExtractor={(_, i) => i + ""}
 					renderItem={({ item }) => (
@@ -115,7 +167,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 					returnKeyLabel="Send Message"
 					returnKeyType="send"
 					onSubmitEditing={handleSubmit(onValid)}
-					onChangeText={(payload) => setValue("payload", payload)}
+					onChangeText={(text) => setValue("payload", text)}
 				/>
 			</ScreenLayout>
 		</KeyboardAvoidingView>

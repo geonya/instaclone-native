@@ -467,7 +467,7 @@ export type SendMessageMutationVariables = Exact<{
 }>;
 
 
-export type SendMessageMutation = { __typename?: 'Mutation', sendMessage?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
+export type SendMessageMutation = { __typename?: 'Mutation', sendMessage?: { __typename?: 'MutationResponse', ok: boolean, id?: number | null } | null };
 
 export type FollowUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -1179,7 +1179,7 @@ export const SendMessageDocument = gql`
     mutation SendMessage($payload: String!, $roomId: Int, $userId: Int) {
   sendMessage(payload: $payload, roomId: $roomId, userId: $userId) {
     ok
-    error
+    id
   }
 }
     `;
