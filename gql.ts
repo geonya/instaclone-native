@@ -157,6 +157,7 @@ query SeeRoom($id:Int!) {
 				avatar
 			}
 			read
+			isMine
 		}
 	}
 }
@@ -227,6 +228,12 @@ gql`
   }
 	${FEED_PHOTO}
 }
+	mutation SendMessage($payload: String!, $roomId: Int, $userId: Int) {
+		sendMessage(payload: $payload, roomId: $roomId, userId: $userId) {
+			ok
+			error
+		}
+	}
 `;
 
 gql`

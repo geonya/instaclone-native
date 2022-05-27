@@ -62,6 +62,7 @@ export type Message = {
   __typename?: 'Message';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
+  isMine: Scalars['Boolean'];
   payload: Scalars['String'];
   read: Scalars['Boolean'];
   room: Room;
@@ -394,7 +395,7 @@ export type SeeRoomQueryVariables = Exact<{
 }>;
 
 
-export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', messages?: Array<{ __typename?: 'Message', id: number, payload: string, read: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null };
+export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', messages?: Array<{ __typename?: 'Message', id: number, payload: string, read: boolean, isMine: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -458,6 +459,15 @@ export type UploadPhotoMutationVariables = Exact<{
 
 
 export type UploadPhotoMutation = { __typename?: 'Mutation', uploadPhoto?: { __typename?: 'Photo', caption?: string | null, createdAt: string, isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null } } | null };
+
+export type SendMessageMutationVariables = Exact<{
+  payload: Scalars['String'];
+  roomId?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type SendMessageMutation = { __typename?: 'Mutation', sendMessage?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
 
 export type FollowUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -845,6 +855,7 @@ export const SeeRoomDocument = gql`
         avatar
       }
       read
+      isMine
     }
   }
 }
@@ -1164,6 +1175,42 @@ export function useUploadPhotoMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UploadPhotoMutationHookResult = ReturnType<typeof useUploadPhotoMutation>;
 export type UploadPhotoMutationResult = Apollo.MutationResult<UploadPhotoMutation>;
 export type UploadPhotoMutationOptions = Apollo.BaseMutationOptions<UploadPhotoMutation, UploadPhotoMutationVariables>;
+export const SendMessageDocument = gql`
+    mutation SendMessage($payload: String!, $roomId: Int, $userId: Int) {
+  sendMessage(payload: $payload, roomId: $roomId, userId: $userId) {
+    ok
+    error
+  }
+}
+    `;
+export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *      roomId: // value for 'roomId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, options);
+      }
+export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
+export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
+export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
 export const FollowUpdatesDocument = gql`
     subscription FollowUpdates {
   followUpdates {

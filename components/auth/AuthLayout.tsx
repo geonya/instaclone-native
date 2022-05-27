@@ -33,8 +33,8 @@ const AuthLayOut = ({ children }: IAuthLayoutProps) => {
 				flex: 1,
 				backgroundColor: "black",
 			}}
-			behavior="height"
-			keyboardVerticalOffset={Platform.OS === "ios" ? 30 : 0}
+			behavior="padding"
+			keyboardVerticalOffset={10}
 		>
 			<DismissKeyBoard>
 				<Container>
