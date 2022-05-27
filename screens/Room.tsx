@@ -46,7 +46,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 			id: route.params.id,
 		},
 	});
-	const { register, handleSubmit, setValue, getValues } =
+	const { register, handleSubmit, setValue, getValues, watch } =
 		useForm<MessageInputValues>();
 	const [sendMessageMutation, { loading: sendLoading }] =
 		useSendMessageMutation({
@@ -59,10 +59,12 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 				} = result;
 				if (ok && meData) {
 					// fake data
+					const payload = getValues("payload");
+					setValue("payload", "");
 					const messageObject = {
 						__typename: "Message",
 						id,
-						payload: getValues("payload"),
+						payload,
 						user: {
 							username: meData?.seeMe?.username,
 							avatar: meData?.seeMe?.avatar,
@@ -70,6 +72,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 						read: true,
 						isMine: true,
 					};
+
 					// fake query
 					const messageFragment = cache.writeFragment({
 						fragment: gql`
@@ -90,7 +93,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 					cache.modify({
 						id: `Room:${route.params.id}`,
 						fields: {
-							messages: (prev) => [messageFragment, ...prev],
+							messages: (prev) => [...prev, messageFragment],
 						},
 					});
 				}
@@ -104,7 +107,6 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 					payload,
 				},
 			});
-			setValue("payload", "");
 		}
 	};
 	useEffect(() => {
@@ -142,7 +144,8 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 				<FlatList
 					refreshing={refreshing}
 					onRefresh={onRefresh}
-					style={{ width: "100%", paddingTop: 20 }}
+					showsVerticalScrollIndicator={false}
+					style={{ width: "100%", paddingVertical: 20 }}
 					ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
 					data={data?.seeRoom?.messages}
 					keyExtractor={(_, i) => i + ""}
@@ -168,6 +171,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 					returnKeyType="send"
 					onSubmitEditing={handleSubmit(onValid)}
 					onChangeText={(text) => setValue("payload", text)}
+					value={watch("payload")}
 				/>
 			</ScreenLayout>
 		</KeyboardAvoidingView>

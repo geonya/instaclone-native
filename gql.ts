@@ -149,6 +149,7 @@ query SeeRooms {
 }
 query SeeRoom($id:Int!) {
 	seeRoom(id:$id) {
+		id
 		messages {
 			id
 			payload

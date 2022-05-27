@@ -395,7 +395,7 @@ export type SeeRoomQueryVariables = Exact<{
 }>;
 
 
-export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', messages?: Array<{ __typename?: 'Message', id: number, payload: string, read: boolean, isMine: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null };
+export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', id: number, messages?: Array<{ __typename?: 'Message', id: number, payload: string, read: boolean, isMine: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -474,6 +474,8 @@ export type FollowUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }
 
 export type FollowUpdatesSubscription = { __typename?: 'Subscription', followUpdates?: { __typename?: 'followUpdatesResult', targetName: string, followerName: string, avatar?: string | null } | null };
 
+export type NewMessageFragment = { __typename?: 'Message', id: number, payload: string, read: boolean, isMine: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } };
+
 export const UserFragmentFragmentDoc = gql`
     fragment UserFragment on User {
   id
@@ -527,6 +529,18 @@ export const RoomFragmentFragmentDoc = gql`
     username
     avatar
   }
+}
+    `;
+export const NewMessageFragmentDoc = gql`
+    fragment NewMessage on Message {
+  id
+  payload
+  user {
+    username
+    avatar
+  }
+  read
+  isMine
 }
     `;
 export const SeeMeDocument = gql`
@@ -847,6 +861,7 @@ export type SeeRoomsQueryResult = Apollo.QueryResult<SeeRoomsQuery, SeeRoomsQuer
 export const SeeRoomDocument = gql`
     query SeeRoom($id: Int!) {
   seeRoom(id: $id) {
+    id
     messages {
       id
       payload
