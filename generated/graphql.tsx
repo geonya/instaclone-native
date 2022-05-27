@@ -340,6 +340,8 @@ export type CommentFragmentFragment = { __typename?: 'Comment', id: number, payl
 
 export type RoomFragmentFragment = { __typename?: 'Room', id: number, unreadTotal: number, users?: Array<{ __typename?: 'User', username: string, avatar?: string | null } | null> | null };
 
+export type MessageFragmentFragment = { __typename?: 'Message', id: number, payload: string, read: boolean, isMine: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } };
+
 export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -469,6 +471,13 @@ export type SendMessageMutationVariables = Exact<{
 
 export type SendMessageMutation = { __typename?: 'Mutation', sendMessage?: { __typename?: 'MutationResponse', ok: boolean, id?: number | null } | null };
 
+export type RoomUpdatesSubscriptionVariables = Exact<{
+  roomUpdatesId: Scalars['Int'];
+}>;
+
+
+export type RoomUpdatesSubscription = { __typename?: 'Subscription', roomUpdates?: { __typename?: 'Message', id: number, payload: string, read: boolean, isMine: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } } | null };
+
 export type FollowUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -529,6 +538,18 @@ export const RoomFragmentFragmentDoc = gql`
     username
     avatar
   }
+}
+    `;
+export const MessageFragmentFragmentDoc = gql`
+    fragment MessageFragment on Message {
+  id
+  payload
+  user {
+    username
+    avatar
+  }
+  read
+  isMine
 }
     `;
 export const NewMessageFragmentDoc = gql`
@@ -863,18 +884,11 @@ export const SeeRoomDocument = gql`
   seeRoom(id: $id) {
     id
     messages {
-      id
-      payload
-      user {
-        username
-        avatar
-      }
-      read
-      isMine
+      ...MessageFragment
     }
   }
 }
-    `;
+    ${MessageFragmentFragmentDoc}`;
 
 /**
  * __useSeeRoomQuery__
@@ -1226,6 +1240,36 @@ export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
+export const RoomUpdatesDocument = gql`
+    subscription RoomUpdates($roomUpdatesId: Int!) {
+  roomUpdates(id: $roomUpdatesId) {
+    ...MessageFragment
+  }
+}
+    ${MessageFragmentFragmentDoc}`;
+
+/**
+ * __useRoomUpdatesSubscription__
+ *
+ * To run a query within a React component, call `useRoomUpdatesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useRoomUpdatesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRoomUpdatesSubscription({
+ *   variables: {
+ *      roomUpdatesId: // value for 'roomUpdatesId'
+ *   },
+ * });
+ */
+export function useRoomUpdatesSubscription(baseOptions: Apollo.SubscriptionHookOptions<RoomUpdatesSubscription, RoomUpdatesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<RoomUpdatesSubscription, RoomUpdatesSubscriptionVariables>(RoomUpdatesDocument, options);
+      }
+export type RoomUpdatesSubscriptionHookResult = ReturnType<typeof useRoomUpdatesSubscription>;
+export type RoomUpdatesSubscriptionResult = Apollo.SubscriptionResult<RoomUpdatesSubscription>;
 export const FollowUpdatesDocument = gql`
     subscription FollowUpdates {
   followUpdates {

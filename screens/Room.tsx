@@ -1,9 +1,13 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import ScreenParamList from "../navigators/screenParamList";
-import { useSeeRoomQuery, useSendMessageMutation } from "../generated/graphql";
+import {
+	RoomUpdatesDocument,
+	useSeeRoomQuery,
+	useSendMessageMutation,
+} from "../generated/graphql";
 import ScreenLayout from "../components/ScreenLayout";
 import styled from "styled-components/native";
 import { UserAvatar } from "../components/sharedStyles";
@@ -50,11 +54,21 @@ interface MessageInputValues {
 type RoomScreenProps = NativeStackScreenProps<ScreenParamList, "Room">;
 const Room = ({ route, navigation }: RoomScreenProps) => {
 	const { data: meData } = useMe();
-	const { data, loading, refetch } = useSeeRoomQuery({
+	const { data, loading, refetch, subscribeToMore } = useSeeRoomQuery({
 		variables: {
 			id: route.params.id,
 		},
 	});
+	useEffect(() => {
+		if (data?.seeRoom) {
+			subscribeToMore({
+				document: RoomUpdatesDocument,
+				variables: {
+					roomUpdatesId: route.params.id,
+				},
+			});
+		}
+	}, [data]);
 	const { register, handleSubmit, setValue, getValues, watch } =
 		useForm<MessageInputValues>();
 	const [sendMessageMutation, { loading: sendLoading }] =
@@ -134,15 +148,6 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 			),
 		});
 	}, []);
-	const [refreshing, setRefreshing] = useState(false);
-	const onRefresh = async () => {
-		if (!refreshing) {
-			setRefreshing(true);
-			await refetch();
-			setRefreshing(false);
-		}
-	};
-
 	return (
 		<KeyboardAvoidingView
 			style={{
@@ -154,8 +159,6 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 		>
 			<ScreenLayout loading={loading}>
 				<FlatList
-					refreshing={refreshing}
-					onRefresh={onRefresh}
 					showsVerticalScrollIndicator={false}
 					style={{ width: "100%", marginVertical: 20 }}
 					inverted

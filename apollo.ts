@@ -63,9 +63,9 @@ const wsLink = new GraphQLWsLink(
 	createClient({
 		url: "ws://localhost:4000/graphql",
 		keepAlive: 10_000,
-		connectionParams: {
+		connectionParams: () => ({
 			token: tokenVar(),
-		},
+		}),
 	})
 );
 

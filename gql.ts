@@ -60,6 +60,18 @@ const ROOM_FRAGMENT = gql`
 		}
 	}
 `;
+const MESSAGE_FRGAMENT = gql`
+	fragment MessageFragment on Message {
+		id
+		payload
+		user {
+			username
+			avatar
+		}
+		read
+		isMine
+	}
+`;
 
 gql`
 	query SeeMe {
@@ -151,16 +163,10 @@ query SeeRoom($id:Int!) {
 	seeRoom(id:$id) {
 		id
 		messages {
-			id
-			payload
-			user{
-				username
-				avatar
-			}
-			read
-			isMine
+			...MessageFragment
 		}
 	}
+	${MESSAGE_FRGAMENT}
 }
 `;
 
@@ -238,6 +244,12 @@ gql`
 `;
 
 gql`
+subscription RoomUpdates($roomUpdatesId: Int!) {
+  roomUpdates(id: $roomUpdatesId) {
+    ...MessageFragment
+  }
+	${MESSAGE_FRGAMENT}
+}
 	subscription FollowUpdates {
 		followUpdates {
 			targetName
