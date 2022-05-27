@@ -28,15 +28,16 @@ interface IAuthLayoutProps {
 }
 const AuthLayOut = ({ children }: IAuthLayoutProps) => {
 	return (
-		<DismissKeyBoard>
-			<Container>
-				<KeyboardAvoidingView
-					style={{
-						width: "100%",
-					}}
-					behavior="padding"
-					keyboardVerticalOffset={Platform.OS === "ios" ? 30 : 0}
-				>
+		<KeyboardAvoidingView
+			style={{
+				flex: 1,
+				backgroundColor: "black",
+			}}
+			behavior="height"
+			keyboardVerticalOffset={Platform.OS === "ios" ? 30 : 0}
+		>
+			<DismissKeyBoard>
+				<Container>
 					<Wrapper>
 						<Logo
 							resizeMode="contain"
@@ -44,9 +45,9 @@ const AuthLayOut = ({ children }: IAuthLayoutProps) => {
 						/>
 						{children}
 					</Wrapper>
-				</KeyboardAvoidingView>
-			</Container>
-		</DismissKeyBoard>
+				</Container>
+			</DismissKeyBoard>
+		</KeyboardAvoidingView>
 	);
 };
 
