@@ -54,7 +54,7 @@ interface MessageInputValues {
 type RoomScreenProps = NativeStackScreenProps<ScreenParamList, "Room">;
 const Room = ({ route, navigation }: RoomScreenProps) => {
 	const { data: meData } = useMe();
-	const { data, loading, refetch, subscribeToMore } = useSeeRoomQuery({
+	const { data, loading, subscribeToMore } = useSeeRoomQuery({
 		variables: {
 			id: route.params.id,
 		},
@@ -65,6 +65,15 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 				document: RoomUpdatesDocument,
 				variables: {
 					roomUpdatesId: route.params.id,
+				},
+				updateQuery: (prev, options) => {
+					console.log(prev);
+					console.log("++++++++++++++++++++++++");
+					console.log(options);
+					const {
+						subscriptionData: { data },
+					} = options;
+					return {};
 				},
 			});
 		}
