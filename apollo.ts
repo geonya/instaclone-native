@@ -1,10 +1,4 @@
-import {
-	ApolloClient,
-	createHttpLink,
-	InMemoryCache,
-	makeVar,
-	split,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, makeVar, split } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	getMainDefinition,
@@ -63,29 +57,30 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
 	}
 });
 
-const link = authLink.concat(onErrorLink).concat(uploadHttpLink);
+const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 
-// const wsLink = new GraphQLWsLink(
-// 	createClient({
-// 		url: "ws://localhost:4000/graphql",
-// 		connectionParams: {
-// 			token: tokenVar(),
-// 		},
-// 	})
-// );
+const wsLink = new GraphQLWsLink(
+	createClient({
+		url: "ws://localhost:4000/graphql",
+		keepAlive: 10_000,
+		connectionParams: {
+			token: tokenVar(),
+		},
+	})
+);
 
 // http - ws url 전환용
-// const splitLink = split(
-// 	({ query }) => {
-// 		const definition = getMainDefinition(query);
-// 		return (
-// 			definition.kind === "OperationDefinition" &&
-// 			definition.operation === "subscription"
-// 		);
-// 	},
-// 	wsLink,
-// 	authHttpLink
-// );
+const splitLink = split(
+	({ query }) => {
+		const definition = getMainDefinition(query);
+		return (
+			definition.kind === "OperationDefinition" &&
+			definition.operation === "subscription"
+		);
+	},
+	wsLink,
+	httpLinks
+);
 
 export const cache = new InMemoryCache({
 	typePolicies: {
@@ -101,7 +96,7 @@ export const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-	link,
+	link: splitLink,
 	cache,
 });
 
