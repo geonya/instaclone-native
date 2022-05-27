@@ -45,18 +45,13 @@ interface IPhoto {
 }
 type SelectPhotoScreenProps = NativeStackScreenProps<ScreenParamList>;
 const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
+	const NUM_COLUMNS = 4;
+	const { width: screenWidth } = useWindowDimensions();
+
 	const [ok, setOk] = useState(false);
 	const [photos, setPhotos] = useState<IPhoto[]>([]);
 	const [chosenPhoto, setChosenPhoto] = useState("");
 	const [photoLocal, setPhotoLocal] = useState("");
-
-	const getPhotos = async () => {
-		if (ok) {
-			const { assets } = await MediaLibrary.getAssetsAsync();
-			setPhotos(assets);
-			setChosenPhoto(assets[0]?.uri);
-		}
-	};
 	const getPermissions = async () => {
 		const { status, canAskAgain } = await MediaLibrary.getPermissionsAsync();
 		if (status === "undetermined" && canAskAgain) {
@@ -75,8 +70,15 @@ const SelectPhoto = ({ navigation }: SelectPhotoScreenProps) => {
 		setPhotoLocal(assetInfo.localUri!);
 		setChosenPhoto(assetInfo.uri);
 	};
-	const NUM_COLUMNS = 4;
-	const { width: screenWidth } = useWindowDimensions();
+	const getPhotos = async () => {
+		if (ok) {
+			const { assets } = await MediaLibrary.getAssetsAsync();
+			setPhotos(assets);
+			setChosenPhoto(assets[0]?.uri);
+			choosePhoto(assets[0]?.id); // 초기 photo uri 값 지정
+		}
+	};
+
 	useEffect(() => {
 		getPermissions();
 		getPhotos();

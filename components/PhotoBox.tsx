@@ -1,12 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import {
-	Image,
-	Text,
-	TouchableOpacity,
-	useWindowDimensions,
-} from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useToggleLikeMutation } from "../generated/graphql";

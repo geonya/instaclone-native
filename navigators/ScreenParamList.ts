@@ -18,6 +18,14 @@ type ScreenParamList = {
 	Upload: undefined;
 	UploadForm: { file: string };
 	Messages: undefined;
+	Room: {
+		id: number;
+		talkingTo?: {
+			username: string;
+			avatar?: string | null | undefined;
+		} | null;
+	};
+	Rooms: undefined;
 };
 
 export default ScreenParamList;

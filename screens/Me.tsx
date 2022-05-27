@@ -7,6 +7,7 @@ import {
 	useWindowDimensions,
 } from "react-native";
 import styled from "styled-components/native";
+import { logUserOut } from "../apollo";
 import useMe from "../components/hooks/useMe";
 import useMyPhotos from "../components/hooks/useMyPhotos";
 import ScreenLayout from "../components/ScreenLayout";
@@ -66,6 +67,14 @@ const Tools = styled.View`
 	margin-bottom: 30px;
 `;
 const ProfileEditBtn = styled.TouchableOpacity`
+	padding: 5px 0;
+	width: 80%;
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	border-radius: 5px;
+	align-items: center;
+	margin-bottom: 10px;
+`;
+const LogOutBtn = styled.TouchableOpacity`
 	padding: 5px 0;
 	width: 80%;
 	border: 1px solid rgba(255, 255, 255, 0.5);
@@ -140,8 +149,12 @@ const Me = ({ navigation }: MeProps) => {
 				<ProfileEditBtn>
 					<FatText>프로필 편집</FatText>
 				</ProfileEditBtn>
+				<LogOutBtn onPress={logUserOut}>
+					<FatText>Log Out</FatText>
+				</LogOutBtn>
 			</Tools>
 			<FlatList
+				inverted={true}
 				refreshing={refreshing}
 				onRefresh={refresh}
 				numColumns={NUM_COLUMS}

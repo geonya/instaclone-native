@@ -147,6 +147,19 @@ query SeeRooms {
   }
 	${ROOM_FRAGMENT}
 }
+query SeeRoom($id:Int!) {
+	seeRoom(id:$id) {
+		messages {
+			id
+			payload
+			user{
+				username
+				avatar
+			}
+			read
+		}
+	}
+}
 `;
 
 // Mutation

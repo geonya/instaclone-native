@@ -337,6 +337,8 @@ export type FeedPhotoFragment = { __typename?: 'Photo', caption?: string | null,
 
 export type CommentFragmentFragment = { __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } };
 
+export type RoomFragmentFragment = { __typename?: 'Room', id: number, unreadTotal: number, users?: Array<{ __typename?: 'User', username: string, avatar?: string | null } | null> | null };
+
 export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -386,6 +388,13 @@ export type SeeRoomsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SeeRoomsQuery = { __typename?: 'Query', seeRooms?: Array<{ __typename?: 'Room', id: number, unreadTotal: number, users?: Array<{ __typename?: 'User', username: string, avatar?: string | null } | null> | null } | null> | null };
+
+export type SeeRoomQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', messages?: Array<{ __typename?: 'Message', id: number, payload: string, read: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -498,6 +507,16 @@ export const CommentFragmentFragmentDoc = gql`
   payload
   isMine
   createdAt
+}
+    `;
+export const RoomFragmentFragmentDoc = gql`
+    fragment RoomFragment on Room {
+  id
+  unreadTotal
+  users {
+    username
+    avatar
+  }
 }
     `;
 export const SeeMeDocument = gql`
@@ -784,15 +803,10 @@ export type SeePhotoQueryResult = Apollo.QueryResult<SeePhotoQuery, SeePhotoQuer
 export const SeeRoomsDocument = gql`
     query SeeRooms {
   seeRooms {
-    id
-    unreadTotal
-    users {
-      username
-      avatar
-    }
+    ...RoomFragment
   }
 }
-    `;
+    ${RoomFragmentFragmentDoc}`;
 
 /**
  * __useSeeRoomsQuery__
@@ -820,6 +834,49 @@ export function useSeeRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<S
 export type SeeRoomsQueryHookResult = ReturnType<typeof useSeeRoomsQuery>;
 export type SeeRoomsLazyQueryHookResult = ReturnType<typeof useSeeRoomsLazyQuery>;
 export type SeeRoomsQueryResult = Apollo.QueryResult<SeeRoomsQuery, SeeRoomsQueryVariables>;
+export const SeeRoomDocument = gql`
+    query SeeRoom($id: Int!) {
+  seeRoom(id: $id) {
+    messages {
+      id
+      payload
+      user {
+        username
+        avatar
+      }
+      read
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeeRoomQuery__
+ *
+ * To run a query within a React component, call `useSeeRoomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeRoomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeRoomQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSeeRoomQuery(baseOptions: Apollo.QueryHookOptions<SeeRoomQuery, SeeRoomQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeRoomQuery, SeeRoomQueryVariables>(SeeRoomDocument, options);
+      }
+export function useSeeRoomLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeRoomQuery, SeeRoomQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeRoomQuery, SeeRoomQueryVariables>(SeeRoomDocument, options);
+        }
+export type SeeRoomQueryHookResult = ReturnType<typeof useSeeRoomQuery>;
+export type SeeRoomLazyQueryHookResult = ReturnType<typeof useSeeRoomLazyQuery>;
+export type SeeRoomQueryResult = Apollo.QueryResult<SeeRoomQuery, SeeRoomQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {

@@ -13,17 +13,22 @@ const MessagesNav = () => {
 			screenOptions={{
 				headerStyle: { backgroundColor: "black" },
 				headerTintColor: "white",
-				headerLeft: ({ tintColor }) => (
-					<Ionicons
-						color={tintColor}
-						name="close"
-						size={28}
-						onPress={() => navigation.goBack()}
-					/>
-				),
 			}}
 		>
-			<Stack.Screen name="Rooms" component={Rooms} />
+			<Stack.Screen
+				name="Rooms"
+				component={Rooms}
+				options={{
+					headerLeft: ({ tintColor }) => (
+						<Ionicons
+							color={tintColor}
+							name="close"
+							size={28}
+							onPress={() => navigation.goBack()}
+						/>
+					),
+				}}
+			/>
 			<Stack.Screen name="Room" component={Room} />
 		</Stack.Navigator>
 	);
