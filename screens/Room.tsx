@@ -5,7 +5,6 @@ import { Ionicons } from "@expo/vector-icons";
 import ScreenParamList from "../navigators/screenParamList";
 import {
 	RoomUpdatesDocument,
-	SubscriptionRoomUpdatesArgs,
 	useSeeRoomQuery,
 	useSendMessageMutation,
 } from "../generated/graphql";
@@ -15,7 +14,6 @@ import { UserAvatar } from "../components/sharedStyles";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useMe from "../components/hooks/useMe";
 import { gql, Reference, useApolloClient } from "@apollo/client";
-import { UpdateQueryFn } from "@apollo/client/core/watchQueryOptions";
 
 const MessageContainer = styled.View<{ isMine?: boolean }>`
 	width: 100%;
@@ -86,33 +84,31 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 				id: `Room:${route.params.id}`,
 				fields: {
 					messages: (prev) => {
-						console.log("prev", prev);
-						console.log("incomingMessage", incomingMessage);
 						const exsitingMessage = prev.find(
 							(aMessage: Reference) => aMessage.__ref === incomingMessage?.__ref
 						);
-						console.log("exsitingMessage", exsitingMessage);
+
 						if (exsitingMessage) {
 							return prev;
 						}
-						return [...prev, incomingMessage];
 					},
 				},
 			});
 		}
-		return prev;
 	};
+	const [subscribed, setSubscribed] = useState(false);
 	useEffect(() => {
-		if (data?.seeRoom) {
+		if (data?.seeRoom && !subscribed) {
 			subscribeToMore({
 				document: RoomUpdatesDocument,
 				variables: {
-					roomUpdatesId: route.params.id,
+					roomUpdatesId: route?.params?.id,
 				},
-				updateQuery,
+				updateQuery: updateQuery as any,
 			});
+			setSubscribed(true);
 		}
-	}, [data]);
+	}, [data, subscribed]);
 	const { register, handleSubmit, setValue, getValues, watch } =
 		useForm<MessageInputValues>();
 	const [sendMessageMutation, { loading: sendLoading }] =

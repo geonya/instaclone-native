@@ -92,6 +92,13 @@ export const cache = new InMemoryCache({
 		User: {
 			keyFields: (obj) => `User:${obj.username}`,
 		},
+		Room: {
+			fields: {
+				messages: {
+					merge: (existing = [], incoming) => [...existing, ...incoming],
+				},
+			},
+		},
 	},
 });
 
