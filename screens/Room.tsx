@@ -1,10 +1,11 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import ScreenParamList from "../navigators/screenParamList";
 import {
 	RoomUpdatesDocument,
+	SubscriptionRoomUpdatesArgs,
 	useSeeRoomQuery,
 	useSendMessageMutation,
 } from "../generated/graphql";
@@ -13,7 +14,8 @@ import styled from "styled-components/native";
 import { UserAvatar } from "../components/sharedStyles";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useMe from "../components/hooks/useMe";
-import { gql } from "@apollo/client";
+import { gql, Reference, useApolloClient } from "@apollo/client";
+import { UpdateQueryFn } from "@apollo/client/core/watchQueryOptions";
 
 const MessageContainer = styled.View<{ isMine?: boolean }>`
 	width: 100%;
@@ -54,11 +56,52 @@ interface MessageInputValues {
 type RoomScreenProps = NativeStackScreenProps<ScreenParamList, "Room">;
 const Room = ({ route, navigation }: RoomScreenProps) => {
 	const { data: meData } = useMe();
-	const { data, loading, subscribeToMore } = useSeeRoomQuery({
+	const { data, loading, subscribeToMore, refetch } = useSeeRoomQuery({
 		variables: {
 			id: route.params.id,
 		},
 	});
+	const client = useApolloClient();
+	const updateQuery = (prev: any, { subscriptionData }: any) => {
+		const {
+			data: { roomUpdates },
+		} = subscriptionData;
+		if (roomUpdates.id) {
+			const incomingMessage = client.cache.writeFragment({
+				fragment: gql`
+					fragment NewMessage on Message {
+						id
+						payload
+						user {
+							username
+							avatar
+						}
+						read
+						isMine
+					}
+				`,
+				data: roomUpdates,
+			});
+			client.cache.modify({
+				id: `Room:${route.params.id}`,
+				fields: {
+					messages: (prev) => {
+						console.log("prev", prev);
+						console.log("incomingMessage", incomingMessage);
+						const exsitingMessage = prev.find(
+							(aMessage: Reference) => aMessage.__ref === incomingMessage?.__ref
+						);
+						console.log("exsitingMessage", exsitingMessage);
+						if (exsitingMessage) {
+							return prev;
+						}
+						return [...prev, incomingMessage];
+					},
+				},
+			});
+		}
+		return prev;
+	};
 	useEffect(() => {
 		if (data?.seeRoom) {
 			subscribeToMore({
@@ -66,15 +109,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 				variables: {
 					roomUpdatesId: route.params.id,
 				},
-				updateQuery: (prev, options) => {
-					console.log(prev);
-					console.log("++++++++++++++++++++++++");
-					console.log(options);
-					const {
-						subscriptionData: { data },
-					} = options;
-					return {};
-				},
+				updateQuery,
 			});
 		}
 	}, [data]);
@@ -157,6 +192,12 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 			),
 		});
 	}, []);
+	const [refreshing, setRefreshing] = useState(false);
+	const onRefresh = async () => {
+		setRefreshing(true);
+		await refetch();
+		setRefreshing(false);
+	};
 	return (
 		<KeyboardAvoidingView
 			style={{
@@ -168,6 +209,8 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 		>
 			<ScreenLayout loading={loading}>
 				<FlatList
+					refreshing={refreshing}
+					onRefresh={onRefresh}
 					showsVerticalScrollIndicator={false}
 					style={{ width: "100%", marginVertical: 20 }}
 					inverted
