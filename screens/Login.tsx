@@ -129,7 +129,7 @@ const Login = ({ route }: LoginScreenProps) => {
 				<FormError message={errors.password?.message} />
 			</InputBox>
 			<AuthButton
-				text="Log In"
+				text="Log In Now!"
 				onPress={handleSubmit(onValid)}
 				loading={loading}
 				disabled={!watch("username") || !watch("password")}
