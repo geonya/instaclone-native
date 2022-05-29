@@ -36,7 +36,10 @@ export const logUserOut = async () => {
 };
 
 const uploadHttpLink = createUploadLink({
-	uri: "http://localhost:4000/graphql",
+	uri:
+		process.env.NODE_ENV === "production"
+			? "https://instaclone-backend-geony.herokuapp.com/graphql"
+			: "http://localhost:4000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -61,8 +64,10 @@ const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 
 const wsLink = new GraphQLWsLink(
 	createClient({
-		url: "ws://localhost:4000/graphql",
-		keepAlive: 10_000,
+		url:
+			process.env.NODE_ENV === "production"
+				? "wss://instaclone-backend-geony.herokuapp.com/graphql"
+				: "ws://localhost:4000/graphql",
 		connectionParams: () => ({
 			token: tokenVar(),
 		}),
