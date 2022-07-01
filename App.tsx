@@ -1,16 +1,16 @@
-import * as Font from "expo-font";
-import { Asset } from "expo-asset";
-import { Ionicons } from "@expo/vector-icons";
-import { useCallback, useEffect, useState } from "react";
-import LoggedOutNav from "./navigators/LoggedOutNav";
-import { NavigationContainer } from "@react-navigation/native";
-import { ApolloProvider, useReactiveVar } from "@apollo/client";
-import client, { cache, isLoggedInVar, tokenVar } from "./apollo";
-import LoggedInNav from "./navigators/LoggedInNav";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageWrapper, CachePersistor } from "apollo3-cache-persist";
-import * as SplashScreen from "expo-splash-screen";
-import { View } from "react-native";
+import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
+import { Ionicons } from '@expo/vector-icons';
+import { useCallback, useEffect, useState } from 'react';
+import LoggedOutNav from './navigators/LoggedOutNav';
+import { NavigationContainer } from '@react-navigation/native';
+import { ApolloProvider, useReactiveVar } from '@apollo/client';
+import client, { cache, isLoggedInVar, tokenVar } from './apollo';
+import LoggedInNav from './navigators/LoggedInNav';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AsyncStorageWrapper, CachePersistor } from 'apollo3-cache-persist';
+import * as SplashScreen from 'expo-splash-screen';
+import { View } from 'react-native';
 
 export default function App() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -18,16 +18,15 @@ export default function App() {
 	const preLoadAssets = () => {
 		const fontsToLoad = [Ionicons.font];
 		const fontPromises = fontsToLoad.map((font: any) => Font.loadAsync(font));
-		const imagesToLoad = [require("./assets/instagram.png")];
+		const imagesToLoad = [require('./assets/instagram.png')];
 		const imagePromises = imagesToLoad.map((image: any) =>
 			Asset.loadAsync(image)
 		);
 		Promise.all([...fontPromises, ...imagePromises]);
 	};
-
 	useEffect(() => {
 		const preLoad = async () => {
-			const token = await AsyncStorage.getItem("token");
+			const token = await AsyncStorage.getItem('token');
 			const cachePersistor = new CachePersistor({
 				cache,
 				storage: new AsyncStorageWrapper(AsyncStorage),

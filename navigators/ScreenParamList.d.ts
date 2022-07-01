@@ -27,5 +27,3 @@ type ScreenParamList = {
 	};
 	Rooms: undefined;
 };
-
-export default ScreenParamList;

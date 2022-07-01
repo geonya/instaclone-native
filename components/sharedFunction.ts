@@ -1,5 +1,4 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import ScreenParamList from "../navigators/screenParamList";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface IGoToProfileProps {
 	navigation: NativeStackNavigationProp<ScreenParamList>;
@@ -11,7 +10,7 @@ export const goToProfile = ({
 	username,
 	userId,
 }: IGoToProfileProps) =>
-	navigation.navigate("Profile", {
+	navigation.navigate('Profile', {
 		username,
 		userId,
 	});
@@ -21,6 +20,6 @@ interface IGotoPhotoProps {
 	photoId: number;
 }
 export const goToPhoto = ({ navigation, photoId }: IGotoPhotoProps) =>
-	navigation.navigate("Photo", {
+	navigation.navigate('Photo', {
 		photoId,
 	});

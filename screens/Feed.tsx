@@ -1,13 +1,12 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import { FlatList, TouchableOpacity } from "react-native";
-import PhotoBox from "../components/PhotoBox";
-import ScreenLayout from "../components/ScreenLayout";
-import { useSeeFeedQuery } from "../generated/graphql";
-import ScreenParamList from "../navigators/screenParamList";
-import { Ionicons } from "@expo/vector-icons";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { FlatList, TouchableOpacity } from 'react-native';
+import PhotoBox from '../components/PhotoBox';
+import ScreenLayout from '../components/ScreenLayout';
+import { useSeeFeedQuery } from '../generated/graphql';
+import { Ionicons } from '@expo/vector-icons';
 
-type FeedScreenProps = NativeStackScreenProps<ScreenParamList, "Feed">;
+type FeedScreenProps = NativeStackScreenProps<ScreenParamList, 'Feed'>;
 
 const Feed = ({ navigation }: FeedScreenProps) => {
 	const { data, loading, refetch, fetchMore } = useSeeFeedQuery({
@@ -26,9 +25,9 @@ const Feed = ({ navigation }: FeedScreenProps) => {
 	const MessagesButton = () => (
 		<TouchableOpacity
 			style={{ marginRight: 25 }}
-			onPress={() => navigation.navigate("Messages")}
+			onPress={() => navigation.navigate('Messages')}
 		>
-			<Ionicons name="paper-plane" color="white" size={20} />
+			<Ionicons name='paper-plane' color='white' size={20} />
 		</TouchableOpacity>
 	);
 	useEffect(() => {
@@ -49,9 +48,9 @@ const Feed = ({ navigation }: FeedScreenProps) => {
 				onEndReachedThreshold={0.5}
 				refreshing={refreshing}
 				onRefresh={refresh}
-				style={{ width: "100%" }}
+				style={{ width: '100%' }}
 				data={data?.seeFeed}
-				keyExtractor={(_, i) => i + ""}
+				keyExtractor={(_, i) => i + ''}
 				renderItem={({ item }) => {
 					return <PhotoBox {...item!} />;
 				}}

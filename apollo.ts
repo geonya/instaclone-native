@@ -1,26 +1,26 @@
-import { ApolloClient, InMemoryCache, makeVar, split } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ApolloClient, InMemoryCache, makeVar, split } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
 	getMainDefinition,
 	offsetLimitPagination,
-} from "@apollo/client/utilities";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { createClient } from "graphql-ws";
-import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
-import { createUploadLink } from "apollo-upload-client";
+} from '@apollo/client/utilities';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
+import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { createUploadLink } from 'apollo-upload-client';
 
-const TOKEN = "token";
-const LOGGED_IN = "loggedIn";
+const TOKEN = 'token';
+const LOGGED_IN = 'loggedIn';
 
 export const isLoggedInVar = makeVar(false);
-export const tokenVar = makeVar("");
+export const tokenVar = makeVar('');
 
 export const logUserIn = async (token: string) => {
 	try {
 		await AsyncStorage.multiSet([
 			[TOKEN, token],
-			[LOGGED_IN, "true"],
+			[LOGGED_IN, 'true'],
 		]);
 	} catch (err) {
 		console.error(err);
@@ -31,15 +31,15 @@ export const logUserIn = async (token: string) => {
 
 export const logUserOut = async () => {
 	await AsyncStorage.multiRemove([TOKEN, LOGGED_IN]);
-	tokenVar("");
+	tokenVar('');
 	isLoggedInVar(false);
 };
 
 const uploadHttpLink = createUploadLink({
 	uri:
-		process.env.NODE_ENV === "production"
-			? "https://instaclone-backend-geony.herokuapp.com/graphql"
-			: "http://localhost:4000/graphql",
+		process.env.NODE_ENV === 'production'
+			? 'https://instaclone-backend-geony.herokuapp.com/graphql'
+			: 'http://localhost:4000/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -65,9 +65,9 @@ const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 const wsLink = new GraphQLWsLink(
 	createClient({
 		url:
-			process.env.NODE_ENV === "production"
-				? "wss://instaclone-backend-geony.herokuapp.com/graphql"
-				: "ws://localhost:4000/graphql",
+			process.env.NODE_ENV === 'production'
+				? 'wss://instaclone-backend-geony.herokuapp.com/graphql'
+				: 'ws://localhost:4000/graphql',
 		connectionParams: () => ({
 			token: tokenVar(),
 		}),
@@ -79,8 +79,8 @@ const splitLink = split(
 	({ query }) => {
 		const definition = getMainDefinition(query);
 		return (
-			definition.kind === "OperationDefinition" &&
-			definition.operation === "subscription"
+			definition.kind === 'OperationDefinition' &&
+			definition.operation === 'subscription'
 		);
 	},
 	wsLink,

@@ -1,6 +1,6 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	ActivityIndicator,
 	FlatList,
@@ -8,12 +8,11 @@ import {
 	TouchableOpacity,
 	useWindowDimensions,
 	View,
-} from "react-native";
-import styled from "styled-components/native";
-import DismissKeyBoard from "../components/DismissKeyBoard";
-import { goToPhoto } from "../components/sharedFunction";
-import { useSearchPhotosLazyQuery } from "../generated/graphql";
-import ScreenParamList from "../navigators/screenParamList";
+} from 'react-native';
+import styled from 'styled-components/native';
+import DismissKeyBoard from '../components/DismissKeyBoard';
+import { goToPhoto } from '../components/sharedFunction';
+import { useSearchPhotosLazyQuery } from '../generated/graphql';
 
 type SearchScreenProps = NativeStackScreenProps<ScreenParamList>;
 interface SearchFormValue {
@@ -56,13 +55,13 @@ const Search = ({ navigation }: SearchScreenProps) => {
 	const SearchBox = () => (
 		<SearchInput
 			width={screenWidth}
-			onChangeText={(text) => setValue("keyword", text)}
-			placeholder="Search Photos"
-			placeholderTextColor="rgba(0,0,0,0.8)"
-			returnKeyLabel="Search"
-			returnKeyType="search"
+			onChangeText={(text) => setValue('keyword', text)}
+			placeholder='Search Photos'
+			placeholderTextColor='rgba(0,0,0,0.8)'
+			returnKeyLabel='Search'
+			returnKeyType='search'
 			autoCorrect={false}
-			autoCapitalize="none"
+			autoCapitalize='none'
 			onSubmitEditing={handleSubmit(onValid)}
 		/>
 	);
@@ -70,20 +69,20 @@ const Search = ({ navigation }: SearchScreenProps) => {
 		navigation.setOptions({
 			headerTitle: SearchBox,
 		});
-		register("keyword", { required: true, minLength: 2 });
+		register('keyword', { required: true, minLength: 2 });
 	}, []);
 	return (
 		<DismissKeyBoard>
 			<View
 				style={{
-					backgroundColor: "black",
+					backgroundColor: 'black',
 					flex: 1,
-					justifyContent: "center",
+					justifyContent: 'center',
 				}}
 			>
 				{loading ? (
 					<MessageContainer>
-						<ActivityIndicator size="large" />
+						<ActivityIndicator size='large' />
 						<MessageText>Searching...</MessageText>
 					</MessageContainer>
 				) : null}
@@ -101,7 +100,7 @@ const Search = ({ navigation }: SearchScreenProps) => {
 						<FlatList
 							numColumns={NUM_COLUMS}
 							data={data?.searchPhotos}
-							keyExtractor={(_, i) => i + ""}
+							keyExtractor={(_, i) => i + ''}
 							renderItem={({ item }) => (
 								<TouchableOpacity
 									onPress={() => goToPhoto({ navigation, photoId: item?.id! })}

@@ -1,18 +1,18 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	ActivityIndicator,
 	KeyboardAvoidingView,
 	Platform,
 	TouchableOpacity,
-} from "react-native";
-import styled from "styled-components/native";
-import { colors } from "../colors";
-import DismissKeyBoard from "../components/DismissKeyBoard";
-import { useUploadPhotoMutation } from "../generated/graphql";
-import ScreenParamList from "../navigators/screenParamList";
-import { ReactNativeFile } from "apollo-upload-client";
+} from 'react-native';
+import styled from 'styled-components/native';
+import { colors } from '../colors';
+import DismissKeyBoard from '../components/DismissKeyBoard';
+import { useUploadPhotoMutation } from '../generated/graphql';
+import ScreenParamList from '../navigators/screenParamList';
+import { ReactNativeFile } from 'apollo-upload-client';
 
 const Container = styled.View`
 	flex: 1;
@@ -53,7 +53,7 @@ interface UploadFormValue {
 
 type UploadFormScreenProps = NativeStackScreenProps<
 	ScreenParamList,
-	"UploadForm"
+	'UploadForm'
 >;
 const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 	const [uploadPhotoMutation, { loading }] = useUploadPhotoMutation({
@@ -64,7 +64,7 @@ const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 			} = result;
 			if (uploadPhoto.id) {
 				cache.modify({
-					id: "ROOT_QUERY",
+					id: 'ROOT_QUERY',
 					fields: {
 						seeFeed: (prev) => [uploadPhoto, ...prev],
 					},
@@ -74,7 +74,7 @@ const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 	});
 	const { register, handleSubmit, setValue } = useForm<UploadFormValue>();
 	useEffect(() => {
-		register("caption", {
+		register('caption', {
 			required: true,
 		});
 	}, [register]);
@@ -85,7 +85,7 @@ const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 	);
 
 	const headerRightLoading = () => (
-		<ActivityIndicator size="small" color="white" style={{ marginRight: 15 }} />
+		<ActivityIndicator size='small' color='white' style={{ marginRight: 15 }} />
 	);
 	useEffect(() => {
 		navigation.setOptions({
@@ -96,8 +96,8 @@ const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 	const onValid: SubmitHandler<UploadFormValue> = ({ caption }) => {
 		const file = new ReactNativeFile({
 			uri: route.params.file,
-			name: "1.jpg",
-			type: "image/jpeg",
+			name: '1.jpg',
+			type: 'image/jpeg',
 		});
 		if (!loading) {
 			uploadPhotoMutation({
@@ -106,7 +106,7 @@ const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 					caption,
 				},
 			});
-			navigation.navigate("Tabs");
+			navigation.navigate('Tabs');
 		}
 	};
 	return (
@@ -114,24 +114,24 @@ const UploadForm = ({ navigation, route }: UploadFormScreenProps) => {
 			<Container>
 				<KeyboardAvoidingView
 					style={{
-						width: "100%",
+						width: '100%',
 					}}
-					behavior="position"
-					keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 0}
+					behavior='position'
+					keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : 0}
 				>
 					<Wrapper>
 						{route?.params ? (
-							<Photo resizeMode="contain" source={{ uri: route.params.file }} />
+							<Photo resizeMode='contain' source={{ uri: route.params.file }} />
 						) : null}
 						<CaptionContainer>
 							<Caption
-								autoCapitalize="none"
+								autoCapitalize='none'
 								autoCorrect={false}
-								placeholder="Write a caption..."
-								placeholderTextColor="rgba(0,0,0,0.5)"
-								onChangeText={(text) => setValue("caption", text)}
+								placeholder='Write a caption...'
+								placeholderTextColor='rgba(0,0,0,0.5)'
+								onChangeText={(text) => setValue('caption', text)}
 								onSubmitEditing={handleSubmit(onValid)}
-								returnKeyType="done"
+								returnKeyType='done'
 							/>
 						</CaptionContainer>
 					</Wrapper>

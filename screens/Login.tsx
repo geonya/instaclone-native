@@ -1,21 +1,20 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useRef } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { TextInput } from "react-native";
-import { logUserIn } from "../apollo";
-import AuthButton from "../components/auth/AuthButton";
-import AuthLayOut from "../components/auth/AuthLayout";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useRef } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { TextInput } from 'react-native';
+import { logUserIn } from '../apollo';
+import AuthButton from '../components/auth/AuthButton';
+import AuthLayOut from '../components/auth/AuthLayout';
 import {
 	AuthTextInput,
 	FormErrorMessage,
 	InputBox,
 	onNext,
-} from "../components/auth/AuthShared";
-import FormError from "../components/auth/FormError";
-import { useLoginMutation } from "../generated/graphql";
-import ScreenParamList from "../navigators/screenParamList";
+} from '../components/auth/AuthShared';
+import FormError from '../components/auth/FormError';
+import { useLoginMutation } from '../generated/graphql';
 
-type LoginScreenProps = NativeStackScreenProps<ScreenParamList, "Login">;
+type LoginScreenProps = NativeStackScreenProps<ScreenParamList, 'Login'>;
 interface ILoginValues {
 	username: string;
 	password: string;
@@ -31,10 +30,10 @@ const Login = ({ route }: LoginScreenProps) => {
 		formState: { errors },
 		watch,
 	} = useForm<ILoginValues>({
-		mode: "onChange",
+		mode: 'onChange',
 		defaultValues: {
-			username: route.params?.username || "",
-			password: route.params?.password || "",
+			username: route.params?.username || '',
+			password: route.params?.password || '',
 		},
 	});
 	const [logInMutation, { loading }] = useLoginMutation({
@@ -47,7 +46,7 @@ const Login = ({ route }: LoginScreenProps) => {
 				logUserIn(token);
 			}
 			if (error) {
-				setError("result", {
+				setError('result', {
 					message: error,
 				});
 			}
@@ -66,7 +65,7 @@ const Login = ({ route }: LoginScreenProps) => {
 	};
 
 	useEffect(() => {
-		register("username", {
+		register('username', {
 			required: FormErrorMessage.required,
 			minLength: {
 				value: 2,
@@ -81,7 +80,7 @@ const Login = ({ route }: LoginScreenProps) => {
 				message: FormErrorMessage.username.pattern,
 			},
 		});
-		register("password", {
+		register('password', {
 			required: FormErrorMessage.required,
 			minLength: {
 				value: 4,
@@ -93,46 +92,46 @@ const Login = ({ route }: LoginScreenProps) => {
 		<AuthLayOut>
 			<InputBox>
 				<AuthTextInput
-					value={watch("username")}
+					value={watch('username')}
 					autoFocus
-					autoCapitalize="none"
+					autoCapitalize='none'
 					autoCorrect={false}
 					ref={usernameRef}
-					placeholder="Username"
-					placeholderTextColor="gray"
-					returnKeyType="next"
+					placeholder='Username'
+					placeholderTextColor='gray'
+					returnKeyType='next'
 					onSubmitEditing={() => onNext(passwordRef)}
 					blurOnSubmit
 					onChangeText={(text) => {
-						setValue("username", text);
-						clearErrors("result");
+						setValue('username', text);
+						clearErrors('result');
 					}}
 				/>
 				<FormError message={errors.username?.message} />
 			</InputBox>
 			<InputBox lastOne>
 				<AuthTextInput
-					value={watch("password")}
+					value={watch('password')}
 					ref={passwordRef}
 					secureTextEntry
-					placeholder="Password"
-					placeholderTextColor="gray"
-					returnKeyType="done"
+					placeholder='Password'
+					placeholderTextColor='gray'
+					returnKeyType='done'
 					blurOnSubmit
 					lastOne
 					onChangeText={(text) => {
-						setValue("password", text);
-						clearErrors("result");
+						setValue('password', text);
+						clearErrors('result');
 					}}
 					onSubmitEditing={handleSubmit(onValid)}
 				/>
 				<FormError message={errors.password?.message} />
 			</InputBox>
 			<AuthButton
-				text="Log In Now!"
+				text='Log In Now!'
 				onPress={handleSubmit(onValid)}
 				loading={loading}
-				disabled={!watch("username") || !watch("password")}
+				disabled={!watch('username') || !watch('password')}
 			/>
 			<FormError message={errors.result?.message} />
 		</AuthLayOut>

@@ -1,12 +1,12 @@
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {
 	createNativeStackNavigator,
 	NativeStackScreenProps,
-} from "@react-navigation/native-stack";
-import SelectPhoto from "../screens/SelectPhoto";
-import TakePhoto from "../screens/TakePhoto";
-import { Ionicons } from "@expo/vector-icons";
-import ScreenParamList from "./screenParamList";
+} from '@react-navigation/native-stack';
+import SelectPhoto from '../screens/SelectPhoto';
+import TakePhoto from '../screens/TakePhoto';
+import { Ionicons } from '@expo/vector-icons';
+import ScreenParamList from './screenParamList';
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -15,41 +15,41 @@ type UpLoadNavScreenProps = NativeStackScreenProps<ScreenParamList>;
 const UploadNav = ({ navigation }: UpLoadNavScreenProps) => {
 	return (
 		<Tab.Navigator
-			tabBarPosition="bottom"
+			tabBarPosition='bottom'
 			screenOptions={{
-				tabBarStyle: { backgroundColor: "black" },
-				tabBarActiveTintColor: "white",
-				tabBarIndicatorStyle: { backgroundColor: "gray", top: 0 },
+				tabBarStyle: { backgroundColor: 'black' },
+				tabBarActiveTintColor: 'white',
+				tabBarIndicatorStyle: { backgroundColor: 'gray', top: 0 },
 			}}
 		>
-			<Tab.Screen name="Select">
+			<Tab.Screen name='Select'>
 				{() => (
 					<Stack.Navigator
 						screenOptions={{
-							headerTintColor: "white",
-							headerStyle: { backgroundColor: "black" },
+							headerTintColor: 'white',
+							headerStyle: { backgroundColor: 'black' },
 						}}
 					>
 						<Stack.Screen
-							name="SelectPhoto"
+							name='SelectPhoto'
 							component={SelectPhoto}
 							options={{
 								headerLeft: ({ tintColor }) => (
 									<Ionicons
 										color={tintColor}
-										name="close"
+										name='close'
 										size={28}
-										onPress={() => navigation.navigate("Tabs")}
+										onPress={() => navigation.navigate('Tabs')}
 									/>
 								),
 
-								title: "Choose a Photo",
+								title: 'Choose a Photo',
 							}}
 						/>
 					</Stack.Navigator>
 				)}
 			</Tab.Screen>
-			<Tab.Screen name="Take" component={TakePhoto} />
+			<Tab.Screen name='Take' component={TakePhoto} />
 		</Tab.Navigator>
 	);
 };

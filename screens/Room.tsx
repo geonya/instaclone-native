@@ -1,23 +1,23 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import { FlatList, KeyboardAvoidingView, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import ScreenParamList from "../navigators/screenParamList";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { FlatList, KeyboardAvoidingView, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import ScreenParamList from '../navigators/screenParamList';
 import {
 	RoomUpdatesDocument,
 	useSeeRoomQuery,
 	useSendMessageMutation,
-} from "../generated/graphql";
-import ScreenLayout from "../components/ScreenLayout";
-import styled from "styled-components/native";
-import { UserAvatar } from "../components/sharedStyles";
-import { SubmitHandler, useForm } from "react-hook-form";
-import useMe from "../components/hooks/useMe";
-import { gql, Reference, useApolloClient } from "@apollo/client";
+} from '../generated/graphql';
+import ScreenLayout from '../components/ScreenLayout';
+import styled from 'styled-components/native';
+import { UserAvatar } from '../components/sharedStyles';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import useMe from '../components/hooks/useMe';
+import { gql, Reference, useApolloClient } from '@apollo/client';
 
 const MessageContainer = styled.View<{ isMine?: boolean }>`
 	width: 100%;
-	flex-direction: ${(props) => (props.isMine ? "row-reverse" : "row")};
+	flex-direction: ${(props) => (props.isMine ? 'row-reverse' : 'row')};
 	align-items: flex-end;
 	padding: 0 10px;
 `;
@@ -51,7 +51,7 @@ const SendBtn = styled.TouchableOpacity`
 interface MessageInputValues {
 	payload: string;
 }
-type RoomScreenProps = NativeStackScreenProps<ScreenParamList, "Room">;
+type RoomScreenProps = NativeStackScreenProps<ScreenParamList, 'Room'>;
 const Room = ({ route, navigation }: RoomScreenProps) => {
 	const { data: meData } = useMe();
 	const { data, loading, subscribeToMore, refetch } = useSeeRoomQuery({
@@ -87,7 +87,6 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 						const exsitingMessage = prev.find(
 							(aMessage: Reference) => aMessage.__ref === incomingMessage?.__ref
 						);
-
 						if (exsitingMessage) {
 							return prev;
 						}
@@ -122,10 +121,10 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 				} = result;
 				if (ok && meData) {
 					// fake data
-					const payload = getValues("payload");
-					setValue("payload", "");
+					const payload = getValues('payload');
+					setValue('payload', '');
 					const messageObject = {
-						__typename: "Message",
+						__typename: 'Message',
 						id,
 						payload,
 						user: {
@@ -173,7 +172,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 		}
 	};
 	useEffect(() => {
-		register("payload", { required: true });
+		register('payload', { required: true });
 	}, [register]);
 	useEffect(() => {
 		navigation.setOptions({
@@ -181,7 +180,7 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 			headerLeft: ({ tintColor }) => (
 				<Ionicons
 					color={tintColor}
-					name="chevron-back"
+					name='chevron-back'
 					size={28}
 					onPress={() => navigation.goBack()}
 				/>
@@ -198,9 +197,9 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 		<KeyboardAvoidingView
 			style={{
 				flex: 1,
-				backgroundColor: "black",
+				backgroundColor: 'black',
 			}}
-			behavior="padding"
+			behavior='padding'
 			keyboardVerticalOffset={90}
 		>
 			<ScreenLayout loading={loading}>
@@ -208,45 +207,45 @@ const Room = ({ route, navigation }: RoomScreenProps) => {
 					refreshing={refreshing}
 					onRefresh={onRefresh}
 					showsVerticalScrollIndicator={false}
-					style={{ width: "100%", marginVertical: 20 }}
+					style={{ width: '100%', marginVertical: 20 }}
 					inverted
 					ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
 					// immutable 한 data를 copy 하여 reverse 시킴 (reverse 메서드는 원본 배열을 변경하기 때문)
 					data={[...(data?.seeRoom?.messages || [])].reverse()}
-					keyExtractor={(_, i) => i + ""}
+					keyExtractor={(_, i) => i + ''}
 					renderItem={({ item }) => (
 						<MessageContainer isMine={item?.isMine}>
 							<Author>
 								<UserAvatar
 									size={30}
-									source={{ uri: item?.user.avatar || "" }}
-									resizeMode="cover"
+									source={{ uri: item?.user.avatar || '' }}
+									resizeMode='cover'
 								/>
 							</Author>
-							<Message style={{ color: "white" }}>{item?.payload}</Message>
+							<Message style={{ color: 'white' }}>{item?.payload}</Message>
 						</MessageContainer>
 					)}
 				/>
 				<InputContainer>
 					<MessageTextInput
-						autoCapitalize="none"
+						autoCapitalize='none'
 						autoCorrect={false}
-						placeholder={"Writh your message"}
-						placeholderTextColor="rgba(255, 255, 255, 0.5)"
-						returnKeyLabel="Send Message"
-						returnKeyType="send"
+						placeholder={'Writh your message'}
+						placeholderTextColor='rgba(255, 255, 255, 0.5)'
+						returnKeyLabel='Send Message'
+						returnKeyType='send'
 						onSubmitEditing={handleSubmit(onValid)}
-						onChangeText={(text) => setValue("payload", text)}
-						value={watch("payload")}
+						onChangeText={(text) => setValue('payload', text)}
+						value={watch('payload')}
 					/>
 					<SendBtn
 						onPress={handleSubmit(onValid)}
-						disabled={!Boolean(watch("payload"))}
+						disabled={!Boolean(watch('payload'))}
 					>
 						<Ionicons
-							name="send"
+							name='send'
 							size={20}
-							color={!Boolean(watch("payload")) ? "gray" : "white"}
+							color={!Boolean(watch('payload')) ? 'gray' : 'white'}
 						/>
 					</SendBtn>
 				</InputContainer>

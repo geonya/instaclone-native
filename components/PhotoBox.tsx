@@ -1,12 +1,11 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Text, TouchableOpacity } from "react-native";
-import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
-import { useToggleLikeMutation } from "../generated/graphql";
-import { UserAvatar, UserInfoBox, FatText } from "./sharedStyles";
-import { goToProfile } from "./sharedFunction";
-import ScreenParamList from "../navigators/screenParamList";
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Text, TouchableOpacity } from 'react-native';
+import styled from 'styled-components/native';
+import { Ionicons } from '@expo/vector-icons';
+import { useToggleLikeMutation } from '../generated/graphql';
+import { UserAvatar, UserInfoBox, FatText } from './sharedStyles';
+import { goToProfile } from './sharedFunction';
 
 const Container = styled.View``;
 
@@ -36,7 +35,7 @@ const ExtraContainer = styled.View`
 `;
 
 interface IPhotoBoxProps {
-	__typename?: "Photo";
+	__typename?: 'Photo';
 	isMine: boolean;
 	id: number;
 	file: string;
@@ -46,7 +45,7 @@ interface IPhotoBoxProps {
 	caption?: string | null;
 	createdAt: string;
 	user: {
-		__typename?: "User";
+		__typename?: 'User';
 		id: number;
 		username: string;
 		avatar?: string | null;
@@ -54,12 +53,12 @@ interface IPhotoBoxProps {
 		isMe: boolean;
 	};
 	comments?: Array<{
-		__typename?: "Comment";
+		__typename?: 'Comment';
 		id: number;
 		payload: string;
 		isMine: boolean;
 		createdAt: string;
-		user: { __typename?: "User"; username: string; avatar?: string | null };
+		user: { __typename?: 'User'; username: string; avatar?: string | null };
 	} | null> | null;
 	fullView?: boolean;
 }
@@ -70,8 +69,6 @@ const PhotoBox = ({
 	isLiked,
 	likes,
 	caption,
-	commentsCount,
-	comments,
 	fullView,
 }: IPhotoBoxProps) => {
 	const navigation: NativeStackNavigationProp<ScreenParamList> =
@@ -100,17 +97,17 @@ const PhotoBox = ({
 			>
 				<UserAvatar
 					size={35}
-					resizeMode="cover"
+					resizeMode='cover'
 					source={{
 						uri:
 							user.avatar ||
-							"https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png",
+							'https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
 					}}
 				/>
 				<FatText>{user.username}</FatText>
 			</UserInfoBox>
 			<File
-				resizeMode="contain"
+				resizeMode='contain'
 				style={{ width: 375, height: 300 }}
 				source={{ uri: file }}
 			/>
@@ -118,22 +115,22 @@ const PhotoBox = ({
 				<Actions>
 					<Action onPress={() => toggleLikeMutation()}>
 						<Ionicons
-							name={isLiked ? "heart" : "heart-outline"}
-							color={isLiked ? "tomato" : "white"}
+							name={isLiked ? 'heart' : 'heart-outline'}
+							color={isLiked ? 'tomato' : 'white'}
 							size={20}
 						/>
 					</Action>
-					<Action onPress={() => navigation.navigate("Comments")}>
-						<Ionicons name="chatbubble-outline" color="white" size={20} />
+					<Action onPress={() => navigation.navigate('Comments')}>
+						<Ionicons name='chatbubble-outline' color='white' size={20} />
 					</Action>
 					<Action>
-						<Ionicons name="paper-plane-outline" color="white" size={20} />
+						<Ionicons name='paper-plane-outline' color='white' size={20} />
 					</Action>
 				</Actions>
 				<TouchableOpacity
-					onPress={() => navigation.navigate("Likes", { photoId: id })}
+					onPress={() => navigation.navigate('Likes', { photoId: id })}
 				>
-					<Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
+					<Likes>{likes === 1 ? '1 like' : `${likes} likes`}</Likes>
 				</TouchableOpacity>
 				<Caption>
 					<TouchableOpacity
@@ -149,7 +146,7 @@ const PhotoBox = ({
 					</TouchableOpacity>
 					<CaptionText>{caption}</CaptionText>
 				</Caption>
-				{fullView && <Text style={{ color: "white" }}>Comments</Text>}
+				{fullView && <Text style={{ color: 'white' }}>Comments</Text>}
 			</ExtraContainer>
 		</Container>
 	);

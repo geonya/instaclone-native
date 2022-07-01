@@ -1,10 +1,10 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import UploadForm from "../screens/UploadForm";
-import TabsNav from "./TabsNav";
-import UploadNav from "./UploadNav";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import MessagesNav from "./MessagesNav";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import UploadForm from '../screens/UploadForm';
+import TabsNav from './TabsNav';
+import UploadNav from './UploadNav';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import MessagesNav from './MessagesNav';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,32 +13,32 @@ const LoggedInNav = () => {
 	return (
 		<Stack.Navigator
 			screenOptions={{
-				presentation: "modal",
-				contentStyle: { backgroundColor: "black" },
+				presentation: 'modal',
+				contentStyle: { backgroundColor: 'black' },
 			}}
 		>
 			<Stack.Screen
-				name="Tabs"
+				name='Tabs'
 				options={{ headerShown: false }}
 				component={TabsNav}
 			/>
 			<Stack.Screen
-				name="Upload"
+				name='Upload'
 				options={{ headerShown: false }}
 				component={UploadNav}
 			/>
 			<Stack.Screen
-				name="UploadForm"
+				name='UploadForm'
 				options={{
 					headerBackTitleVisible: false,
-					title: "Upload Photo",
+					title: 'Upload Photo',
 
-					headerTintColor: "white",
-					headerStyle: { backgroundColor: "black" },
+					headerTintColor: 'white',
+					headerStyle: { backgroundColor: 'black' },
 					headerLeft: ({ tintColor }) => (
 						<Ionicons
 							color={tintColor}
-							name="close"
+							name='close'
 							size={28}
 							onPress={() => navigation.goBack()}
 						/>
@@ -47,7 +47,7 @@ const LoggedInNav = () => {
 				component={UploadForm}
 			/>
 			<Stack.Screen
-				name="Messages"
+				name='Messages'
 				component={MessagesNav}
 				options={{ headerShown: false }}
 			/>

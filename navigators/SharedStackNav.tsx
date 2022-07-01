@@ -1,33 +1,33 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Image } from "react-native";
-import Comments from "../screens/Comments";
-import Feed from "../screens/Feed";
-import Likes from "../screens/Likes";
-import Me from "../screens/Me";
-import Notifications from "../screens/Notifications";
-import Photo from "../screens/Photo";
-import Profile from "../screens/Profile";
-import Search from "../screens/Search";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Image } from 'react-native';
+import Comments from '../screens/Comments';
+import Feed from '../screens/Feed';
+import Likes from '../screens/Likes';
+import Me from '../screens/Me';
+import Notifications from '../screens/Notifications';
+import Photo from '../screens/Photo';
+import Profile from '../screens/Profile';
+import Search from '../screens/Search';
 
 interface ISharedStackNavProps {
 	screenName: string;
 }
-const Stack = createNativeStackNavigator();
 
 const SharedStackNav = ({ screenName }: ISharedStackNavProps) => {
+	const Stack = createNativeStackNavigator();
 	return (
 		<Stack.Navigator
 			screenOptions={{
 				headerStyle: {
-					backgroundColor: "black",
+					backgroundColor: 'black',
 				},
-				headerTintColor: "white",
+				headerTintColor: 'white',
 				headerBackTitleVisible: false,
 			}}
 		>
-			{screenName === "Feed" ? (
+			{screenName === 'Feed' ? (
 				<Stack.Screen
-					name="Feed"
+					name='Feed'
 					component={Feed}
 					options={{
 						headerTitle: () => (
@@ -36,24 +36,24 @@ const SharedStackNav = ({ screenName }: ISharedStackNavProps) => {
 									width: 150,
 									height: 50,
 								}}
-								resizeMode="cover"
-								source={require("../assets/instagram.png")}
+								resizeMode='cover'
+								source={require('../assets/instagram.png')}
 							/>
 						),
 					}}
 				/>
 			) : null}
-			{screenName === "Search" ? (
-				<Stack.Screen name="Search" component={Search} />
+			{screenName === 'Search' ? (
+				<Stack.Screen name='Search' component={Search} />
 			) : null}
-			{screenName === "Notifications" ? (
-				<Stack.Screen name="Notifications" component={Notifications} />
+			{screenName === 'Notifications' ? (
+				<Stack.Screen name='Notifications' component={Notifications} />
 			) : null}
-			{screenName === "Me" ? <Stack.Screen name="Me" component={Me} /> : null}
-			<Stack.Screen name="Profile" component={Profile} />
-			<Stack.Screen name="Photo" component={Photo} />
-			<Stack.Screen name="Likes" component={Likes} />
-			<Stack.Screen name="Comments" component={Comments} />
+			{screenName === 'Me' ? <Stack.Screen name='Me' component={Me} /> : null}
+			<Stack.Screen name='Profile' component={Profile} />
+			<Stack.Screen name='Photo' component={Photo} />
+			<Stack.Screen name='Likes' component={Likes} />
+			<Stack.Screen name='Comments' component={Comments} />
 		</Stack.Navigator>
 	);
 };

@@ -1,9 +1,9 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, View } from "react-native";
-import useMe from "../components/hooks/useMe";
-import TabIcon from "../components/nav/TabIcon";
-import { UserAvatar } from "../components/sharedStyles";
-import SharedStackNav from "./SharedStackNav";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View } from 'react-native';
+import useMe from '../components/hooks/useMe';
+import TabIcon from '../components/nav/TabIcon';
+import { UserAvatar } from '../components/sharedStyles';
+import SharedStackNav from './SharedStackNav';
 
 const Tabs = createBottomTabNavigator();
 
@@ -13,30 +13,30 @@ const TabsNav = () => {
 		<Tabs.Navigator
 			screenOptions={{
 				headerShown: false,
-				tabBarActiveTintColor: "white",
+				tabBarActiveTintColor: 'white',
 				tabBarShowLabel: false,
 				tabBarStyle: {
-					borderTopColor: "rgba(255,255,255,0.5)",
-					backgroundColor: "black",
+					borderTopColor: 'rgba(255,255,255,0.5)',
+					backgroundColor: 'black',
 				},
 			}}
 		>
 			<Tabs.Screen
-				name="TabFeed"
+				name='TabFeed'
 				options={{
 					tabBarIcon: ({ focused, color, size }) => (
-						<TabIcon name="home" focused={focused} color={color} size={size} />
+						<TabIcon name='home' focused={focused} color={color} size={size} />
 					),
 				}}
 			>
-				{() => <SharedStackNav screenName="Feed" />}
+				{() => <SharedStackNav screenName='Feed' />}
 			</Tabs.Screen>
 			<Tabs.Screen
-				name="TabSearch"
+				name='TabSearch'
 				options={{
 					tabBarIcon: ({ focused, color, size }) => (
 						<TabIcon
-							name="search"
+							name='search'
 							focused={focused}
 							color={color}
 							size={size}
@@ -44,23 +44,23 @@ const TabsNav = () => {
 					),
 				}}
 			>
-				{() => <SharedStackNav screenName="Search" />}
+				{() => <SharedStackNav screenName='Search' />}
 			</Tabs.Screen>
 			<Tabs.Screen
-				name="Camera"
+				name='Camera'
 				component={View}
 				listeners={({ navigation }) => {
 					return {
 						tabPress: (e) => {
 							e.preventDefault();
-							navigation.navigate("Upload");
+							navigation.navigate('Upload');
 						},
 					};
 				}}
 				options={{
 					tabBarIcon: ({ focused, color, size }) => (
 						<TabIcon
-							name="camera"
+							name='camera'
 							focused={focused}
 							color={color}
 							size={size}
@@ -69,32 +69,32 @@ const TabsNav = () => {
 				}}
 			/>
 			<Tabs.Screen
-				name="TabNotifications"
+				name='TabNotifications'
 				options={{
 					tabBarIcon: ({ focused, color, size }) => (
-						<TabIcon name="heart" focused={focused} color={color} size={size} />
+						<TabIcon name='heart' focused={focused} color={color} size={size} />
 					),
 				}}
 			>
-				{() => <SharedStackNav screenName="Notifications" />}
+				{() => <SharedStackNav screenName='Notifications' />}
 			</Tabs.Screen>
 
 			<Tabs.Screen
-				name="TabMe"
+				name='TabMe'
 				options={{
 					tabBarIcon: ({ focused, color, size }) =>
 						data?.seeMe?.avatar ? (
 							<UserAvatar
 								size={30}
-								resizeMode="cover"
+								resizeMode='cover'
 								source={{ uri: data?.seeMe?.avatar }}
 								style={{
-									...(focused && { borderColor: "white", borderWidth: 2 }),
+									...(focused && { borderColor: 'white', borderWidth: 2 }),
 								}}
 							/>
 						) : (
 							<TabIcon
-								name="person"
+								name='person'
 								focused={focused}
 								color={color}
 								size={size}
@@ -102,7 +102,7 @@ const TabsNav = () => {
 						),
 				}}
 			>
-				{() => <SharedStackNav screenName="Me" />}
+				{() => <SharedStackNav screenName='Me' />}
 			</Tabs.Screen>
 		</Tabs.Navigator>
 	);

@@ -1,20 +1,13 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useState } from "react";
-import {
-	RefreshControl,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import PhotoBox from "../components/PhotoBox";
-import ScreenLayout from "../components/ScreenLayout";
-import { useSeePhotoQuery } from "../generated/graphql";
-import ScreenParamList from "../navigators/screenParamList";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useState } from 'react';
+import { RefreshControl, ScrollView } from 'react-native';
+import PhotoBox from '../components/PhotoBox';
+import ScreenLayout from '../components/ScreenLayout';
+import { useSeePhotoQuery } from '../generated/graphql';
 
-type SearchScreenProps = NativeStackScreenProps<ScreenParamList, "Photo">;
+type SearchScreenProps = NativeStackScreenProps<ScreenParamList, 'Photo'>;
 
-const Photo = ({ navigation, route }: SearchScreenProps) => {
+const Photo = ({ route }: SearchScreenProps) => {
 	const { data, loading, refetch } = useSeePhotoQuery({
 		variables: {
 			id: route?.params?.photoId,
@@ -32,11 +25,11 @@ const Photo = ({ navigation, route }: SearchScreenProps) => {
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
-				style={{ backgroundColor: "black" }}
+				style={{ backgroundColor: 'black' }}
 				contentContainerStyle={{
-					backgroundColor: "black",
+					backgroundColor: 'black',
 					flex: 1,
-					alignItems: "center",
+					alignItems: 'center',
 				}}
 			>
 				<PhotoBox {...data?.seePhoto!} fullView />

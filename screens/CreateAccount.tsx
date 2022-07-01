@@ -1,22 +1,21 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TextInput } from "react-native";
-import AuthLayOut from "../components/auth/AuthLayout";
-import AuthButton from "../components/auth/AuthButton";
-import { useEffect, useRef } from "react";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { TextInput } from 'react-native';
+import AuthLayOut from '../components/auth/AuthLayout';
+import AuthButton from '../components/auth/AuthButton';
+import { useEffect, useRef } from 'react';
 import {
 	AuthTextInput,
 	FormErrorMessage,
 	InputBox,
 	onNext,
-} from "../components/auth/AuthShared";
-import { SubmitHandler, useForm } from "react-hook-form";
-import FormError from "../components/auth/FormError";
-import { useCreateAccountMutation } from "../generated/graphql";
-import ScreenParamList from "../navigators/screenParamList";
+} from '../components/auth/AuthShared';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import FormError from '../components/auth/FormError';
+import { useCreateAccountMutation } from '../generated/graphql';
 
 type CreateAccountScreenProps = NativeStackScreenProps<
 	ScreenParamList,
-	"CreateAccount"
+	'CreateAccount'
 >;
 interface ICreateAccountValues {
 	firstName: string;
@@ -46,13 +45,13 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			} = data;
 			if (ok) {
 				const { username, password } = getValues();
-				navigation.navigate("Login", {
+				navigation.navigate('Login', {
 					username,
 					password,
 				});
 			}
 			if (error) {
-				setError("result", {
+				setError('result', {
 					message: error,
 				});
 			}
@@ -72,7 +71,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 		}
 	};
 	useEffect(() => {
-		register("firstName", {
+		register('firstName', {
 			required: FormErrorMessage.required,
 			minLength: {
 				value: 2,
@@ -87,7 +86,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				message: FormErrorMessage.firstName.pattern,
 			},
 		});
-		register("lastName", {
+		register('lastName', {
 			required: FormErrorMessage.required,
 			minLength: {
 				value: 2,
@@ -102,7 +101,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				message: FormErrorMessage.lastName.pattern,
 			},
 		});
-		register("username", {
+		register('username', {
 			required: FormErrorMessage.required,
 			minLength: {
 				value: 2,
@@ -117,7 +116,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				message: FormErrorMessage.username.pattern,
 			},
 		});
-		register("email", {
+		register('email', {
 			required: FormErrorMessage.required,
 			pattern: {
 				value:
@@ -125,7 +124,7 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				message: FormErrorMessage.email.pattern,
 			},
 		});
-		register("password", {
+		register('password', {
 			required: FormErrorMessage.required,
 			minLength: {
 				value: 4,
@@ -138,14 +137,14 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			<InputBox>
 				<AuthTextInput
 					autoFocus
-					autoCapitalize="none"
+					autoCapitalize='none'
 					autoCorrect={false}
-					placeholder={errors.firstName ? errors.firstName?.message : "First"}
-					placeholderTextColor="gray"
-					returnKeyType="next"
+					placeholder={errors.firstName ? errors.firstName?.message : 'First'}
+					placeholderTextColor='gray'
+					returnKeyType='next'
 					onChangeText={(text) => {
-						setValue("firstName", text);
-						clearErrors("result");
+						setValue('firstName', text);
+						clearErrors('result');
 					}}
 					onSubmitEditing={() => onNext(lastNameRef)}
 				/>
@@ -155,13 +154,13 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				<AuthTextInput
 					ref={lastNameRef}
 					autoCorrect={false}
-					autoCapitalize="none"
-					placeholder="Last Name"
-					placeholderTextColor="gray"
-					returnKeyType="next"
+					autoCapitalize='none'
+					placeholder='Last Name'
+					placeholderTextColor='gray'
+					returnKeyType='next'
 					onChangeText={(text) => {
-						setValue("lastName", text);
-						clearErrors("result");
+						setValue('lastName', text);
+						clearErrors('result');
 					}}
 					onSubmitEditing={() => onNext(usernameRef)}
 				/>
@@ -171,13 +170,13 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				<AuthTextInput
 					ref={usernameRef}
 					autoCorrect={false}
-					autoCapitalize="none"
-					placeholder="Username"
-					placeholderTextColor="gray"
-					returnKeyType="next"
+					autoCapitalize='none'
+					placeholder='Username'
+					placeholderTextColor='gray'
+					returnKeyType='next'
 					onChangeText={(text) => {
-						setValue("username", text);
-						clearErrors("result");
+						setValue('username', text);
+						clearErrors('result');
 					}}
 					onSubmitEditing={() => onNext(emailRef)}
 				/>
@@ -186,15 +185,15 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			<InputBox>
 				<AuthTextInput
 					ref={emailRef}
-					autoCapitalize="none"
+					autoCapitalize='none'
 					autoCorrect={false}
-					keyboardType="email-address"
-					placeholder="Email"
-					placeholderTextColor="gray"
-					returnKeyType="next"
+					keyboardType='email-address'
+					placeholder='Email'
+					placeholderTextColor='gray'
+					returnKeyType='next'
 					onChangeText={(text) => {
-						setValue("email", text);
-						clearErrors("result");
+						setValue('email', text);
+						clearErrors('result');
 					}}
 					onSubmitEditing={() => onNext(passwordRef)}
 				/>
@@ -204,13 +203,13 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 				<AuthTextInput
 					ref={passwordRef}
 					secureTextEntry
-					placeholder="Password"
-					placeholderTextColor="gray"
-					returnKeyType="done"
+					placeholder='Password'
+					placeholderTextColor='gray'
+					returnKeyType='done'
 					blurOnSubmit
 					onChangeText={(text) => {
-						setValue("password", text);
-						clearErrors("result");
+						setValue('password', text);
+						clearErrors('result');
 					}}
 					onSubmitEditing={handleSubmit(onValid)}
 				/>
@@ -219,14 +218,14 @@ const CreateAccount = ({ navigation }: CreateAccountScreenProps) => {
 			<AuthButton
 				onPress={handleSubmit(onValid)}
 				disabled={
-					!watch("email") ||
-					!watch("firstName") ||
-					!watch("lastName") ||
-					!watch("username") ||
-					!watch("password")
+					!watch('email') ||
+					!watch('firstName') ||
+					!watch('lastName') ||
+					!watch('username') ||
+					!watch('password')
 				}
 				loading={loading}
-				text="Create Account"
+				text='Create Account'
 			/>
 			<FormError message={errors.result?.message} />
 		</AuthLayOut>
